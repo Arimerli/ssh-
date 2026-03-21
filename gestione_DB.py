@@ -45,14 +45,14 @@ cursore.execute("CREATE TABLE categories ("
                 "id SERIAL PRIMARY KEY,"
                 "nome VARCHAR(255) NOT NULL,"
                 "parent_id INT,"
-                "FOREIGN KEY(parent_id) REFERENCES categories(id)")
+                "FOREIGN KEY(parent_id) REFERENCES categories(id))")
 
 cursore.execute("DROP TABLE IF EXISTS locations")
 cursore.execute("CREATE TABLE locations ("
                 "id SERIAL PRIMARY KEY,"
                 "nome VARCHAR(255) NOT NULL,"
                 "parent_id INT,"
-                "FOREIGN KEY(parent_id) REFERENCES locations(id)")
+                "FOREIGN KEY(parent_id) REFERENCES locations(id))")
 
 cursore.execute("DROP TABLE IF EXISTS components")
 cursore.execute("CREATE TABLE components ("
@@ -61,7 +61,7 @@ cursore.execute("CREATE TABLE components ("
                 "categoria INT NOT NULL,"
                 "pezzi INT NOT NULL,"
                 "link VARCHAR(255) NOT NULL,"
-                "FOREIGN KEY (categoria) REFERENCES categories(id)")
+                "FOREIGN KEY (categoria) REFERENCES categories(id))")
 
 cursore.execute("DROP TABLE IF EXISTS tags")
 cursore.execute("CREATE TABLE tags ("
@@ -90,15 +90,17 @@ cursore.execute("CREATE TABLE giacenze("
 cursore.execute("DROP TABLE IF EXISTS esperienze")
 cursore.execute("CREATE TABLE esperienze ("
                 "id SERIAL PRIMARY KEY,"
-                "nome VARCHAR(255) NOT NULL),"
-                "descrizione VARCHAR(255)")
+                "nome VARCHAR(255) NOT NULL,"
+                "descrizione VARCHAR(255))")
 
 cursore.execute("DROP TABLE IF EXISTS esperienze_components")
-cursore.execute("CREATE TABLE tag_components ("
+cursore.execute("CREATE TABLE esperienze_components ("
                 "id SERIAL PRIMARY KEY,"
                 "esperienza_id INT NOT NULL,"
                 "component_id INT NOT NULL,"
                 "FOREIGN KEY (esperienza_id) REFERENCES esperienze(id),"
                 "FOREIGN KEY (component_id) REFERENCES components(id))")
 
-
+conn.commit()
+conn.close()
+print("yeah")
