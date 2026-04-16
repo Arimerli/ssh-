@@ -5,7 +5,7 @@
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 10px;
 }
 
 /* contenitore della searchbox con icona e input affiancati */
@@ -58,4 +58,46 @@
   margin-left: auto; /* Spinge il pulsante tutto a destra */
   display: flex;
   align-items: center;
+}
+
+
+.userArea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--avatar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--avatar-text);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.userName {
+  font-size: 15px;
+  color: var(--text-main);
+  font-weight: 500;
+  text-align: right;
+}
+
+.userRole {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.rightSection {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding-right: 20px;
 }

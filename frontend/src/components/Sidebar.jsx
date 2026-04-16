@@ -32,14 +32,6 @@ function Sidebar() {
                         <NavLink to="/impostazioni" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}>Impostazioni</NavLink>
                 </div>
             </nav>
-
-            <div className={styles.userArea}>
-                <div className={styles.userAvatar}>AD</div>
-                <div>
-                    <div className={styles.userName}>Admin</div>
-                    <div className={styles.userRole}>Accesso Completo</div>
-                </div>
-            </div>
         </div>
     );
 }

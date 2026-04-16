@@ -6,8 +6,7 @@
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 10px; /* Spazio tra icona e testo */
-
+  gap: 10px;
   background-color: var(--bg-input);
   color: var(--text-main);
   border: 1px solid var(--border-color);
@@ -15,12 +14,12 @@
 }
 
 .icon {
-  font-size: 18px; /* Regola la grandezza dell'icona */
-  color: var(--accent); /* L'icona userà il colore azzurro definito in index.css */
+  font-size: 18px;
+  color: var(--accent);
 }
 
 .label {
-  /* Nascondi il testo su schermi molto piccoli se vuoi, o lascialo così */
+
 }
 
 .button:hover {

@@ -34,8 +34,19 @@ function Topbar() {
                     </button>
                 )}
             </div>
-            <div className={styles.actions}>
-                <ThemeToggle />
+
+            <div className={styles.rightSection}>
+                <div className={styles.actions}>
+                    <ThemeToggle />
+                </div>
+
+                <div className={styles.userArea}>
+                    <div>
+                        <div className={styles.userName}>Admin</div>
+                        <div className={styles.userRole}>Accesso Completo</div>
+                    </div>
+                    <div className={styles.userAvatar}>AD</div>
+                </div>
             </div>
         </div>
     );
