@@ -1,12 +1,17 @@
 /* contenitore principale che affianca sidebar e contenuto */
 .appContainer {
   display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color0.3s ease;
 }
 
 /* area del contenuto principale a destra della sidebar */
 .mainContent {
   flex: 1;
   padding: 20px;
+  background-color: var(--bg-primary);
 }
 
 .rightColumn {
@@ -14,4 +19,5 @@
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+  border-left: 1px solid var(--text-primary);
 }
