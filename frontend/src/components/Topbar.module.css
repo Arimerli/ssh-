@@ -1,8 +1,8 @@
 /* barra superiore: occupa tutta la larghezza, allinea il contenuto */
 .topbar {
   height: 93px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #a7b7c7;
+  background-color: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   padding: 0 24px;
@@ -12,9 +12,9 @@
 .searchBox {
   display: flex;
   align-items: center;
-  background-color: #ffffff;
+  background-color: var(--bg-input);
   border-radius: 5px;
-  border: 1.50px solid #378ADD;
+  border: 1.50px solid var(--accent);
   padding: 8px 16px;
   width: 500px;
   gap: 12px;
@@ -25,21 +25,21 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #080808;
+  color: var(--accent);
   font-size: 14px;
   width: 100%;
 }
 
 /* testo del placeholder più tenue */
 .searchInput::placeholder {
-  color: #888;
+  color: var(--text-muted);
 }
 
 /* pulsante X: niente sfondo, cursore pointer */
 .clearButton {
   background: none;
   border: none;
-  color: #888;
+  color: var(--text-muted);
   cursor: pointer;
   font-size: 12px;
   padding: 0;
@@ -52,4 +52,10 @@
 .searchIcon {
   color: #378ADD;
   font-size: 16px;
+}
+
+.actions {
+  margin-left: auto; /* Spinge il pulsante tutto a destra */
+  display: flex;
+  align-items: center;
 }

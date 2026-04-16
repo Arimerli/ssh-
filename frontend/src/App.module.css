@@ -5,6 +5,7 @@
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color0.3s ease;
+  overflow: hidden;
 }
 
 /* area del contenuto principale a destra della sidebar */
@@ -19,5 +20,5 @@
   flex-direction: column;
   flex: 1;
   overflow: hidden;
-  border-left: 1px solid var(--text-primary);
+  border-left: 1px solid var(--border-color);
 }

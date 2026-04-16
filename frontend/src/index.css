@@ -1,37 +1,53 @@
 :root {
+  /* Layout e Sfondi */
   --bg-primary: #ffffff;
-  --text-primary: #212529;
   --bg-sidebar: #ffffff;
+  --bg-input: #ffffff;
   --bg-hover: #f8fafc;
   --bg-active: #f0f4f9;
-  --border-color: #a7b7c7;
+
+  /* Testi */
+  --text-primary: #212529;
   --text-main: #0C447C;
   --text-muted: #9aaac0;
+  --text-input: #080808;
+  --nav-label: #585b5e;
+
+  /* Bordi e Accenti */
+  --border-color: #a7b7c7;
   --accent: #378ADD;
+  --avatar-bg: #E6F1FB;
+  --avatar-text: #185FA5;
 }
 
-/* 2. Variabili che cambiano quando attiviamo il tema dark */
 [data-theme='dark'] {
+  /* Layout e Sfondi Dark */
   --bg-primary: #121212;
-  --text-primary: #f8f9fa;
   --bg-sidebar: #1e1e1e;
+  --bg-input: #2d2d2d;
   --bg-hover: #2d2d2d;
   --bg-active: #252525;
-  --border-color: #404040;
+
+  /* Testi Dark */
+  --text-primary: #f8f9fa;
   --text-main: #e0e0e0;
   --text-muted: #888888;
+  --text-input: #f8f9fa;
+  --nav-label: #a0a0a0;
+
+  /* Bordi e Accenti Dark */
+  --border-color: #404040;
   --accent: #60a5fa;
+  --avatar-bg: #1e3a5a;
+  --avatar-text: #60a5fa;
 }
 
 body {
   margin: 0;
   background-color: var(--bg-primary);
-  color:var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {

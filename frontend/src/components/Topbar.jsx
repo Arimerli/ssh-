@@ -1,6 +1,8 @@
 import { FiSearch } from "react-icons/fi";
 import { useState } from "react"; //per la gestione dell'inserimento del testo
 import styles from "./Topbar.module.css";
+import { LuSearch, LuX } from "react-icons/lu";
+import ThemeToggle from './ThemeToggle';
 
 function Topbar() {
 
@@ -31,6 +33,9 @@ function Topbar() {
                         ✕
                     </button>
                 )}
+            </div>
+            <div className={styles.actions}>
+                <ThemeToggle />
             </div>
         </div>
     );
