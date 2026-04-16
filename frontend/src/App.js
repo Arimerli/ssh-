@@ -3,8 +3,9 @@
 /* Routes e Route definiscono quale componente mostrare per ogni indirizzo */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-/* importa il componente Sidebar */
+/* importa i componenti nella pagina */
 import Sidebar from "./components/Sidebar";
+import Topbar from"./components/Topbar";
 
 /* importa il file CSS di questo componente */
 import styles from "./App.module.css";
@@ -19,21 +20,22 @@ function App() {
 
         {/* la sidebar appare su tutte le pagine */}
         <Sidebar />
+        <div className={styles.rightColumn}>
+            <Topbar />
+            {/* area del contenuto principale */}
+            <div className={styles.mainContent}>
 
-        {/* area del contenuto principale */}
-        <div className={styles.mainContent}>
-
-          {/* Routes decide quale pagina mostrare in base all'indirizzo */}
-          <Routes>
-            {/* per ora mostriamo solo testi segnaposto */}
-            <Route path="/componenti" element={<h1>Pagina Componenti</h1>} />
-            <Route path="/categorie" element={<h1>Pagina Categorie</h1>} />
-            <Route path="/posizioni" element={<h1>Pagina Posizioni</h1>} />
-            <Route path="/esperienze" element={<h1>Pagina Esperienze</h1>} />
-            <Route path="/statistiche" element={<h1>Pagina Statistiche</h1>} />
-            <Route path="/utenti" element={<h1>Pagina Utenti</h1>} />
-          </Routes>
-
+            {/* Routes decide quale pagina mostrare in base all'indirizzo */}
+            <Routes>
+                {/* per ora mostriamo solo testi segnaposto */}
+                <Route path="/componenti" element={<h1>Pagina Componenti</h1>} />
+                <Route path="/categorie" element={<h1>Pagina Categorie</h1>} />
+                <Route path="/posizioni" element={<h1>Pagina Posizioni</h1>} />
+                <Route path="/esperienze" element={<h1>Pagina Esperienze</h1>} />
+                <Route path="/statistiche" element={<h1>Pagina Statistiche</h1>} />
+                <Route path="/utenti" element={<h1>Pagina Utenti</h1>} />
+              </Routes>
+            </div>
         </div>
       </div>
 

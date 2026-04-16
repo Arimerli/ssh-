@@ -2,18 +2,18 @@
   width: 200px;
   min-height: 100vh;
   background: #fff;
-  border-right: 0.5px solid #dde4ef;
+  border-right: 0.5px solid #a7b7c7;
   display: flex;
   flex-direction: column;
 }
 
 .logoArea {
-  padding: 20px 18px 16px;
-  border-bottom: 0.5px solid #dde4ef;
+  padding: 26px 22px 20px;
+  border-bottom: 1px solid #a7b7c7;
 }
 
 .logoTitle {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 500;
   color: #0C447C;
 }
@@ -23,14 +23,14 @@
 }
 
 .logoSub {
-  font-size: 10px;
+  font-size: 13px;
   color: #9aaac0;
   margin-top: 3px;
 }
 
 .navGroupLabel {
-  font-size: 9px;
-  color: #b0bdd0;
+  font-size: 12px;
+  color: #585b5e;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0 18px 8px;
@@ -43,7 +43,7 @@
 .navLink {
   display: block;
   padding: 8px 18px;
-  font-size: 12px;
+  font-size: 15px;
   color: #6a80a0;
   text-decoration: none;
   border-right: 3px solid transparent;
@@ -63,16 +63,16 @@
 
 .userArea {
   margin-top: auto;
-  border-top: 0.5px solid #dde4ef;
-  padding: 14px 18px;
+  border-top: 0.5px solid #a7b7c7;
+  padding: 20px 25px;
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
 .userAvatar {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: #E6F1FB;
   display: flex;
@@ -85,12 +85,12 @@
 }
 
 .userName {
-  font-size: 12px;
+  font-size: 18px;
   color: #0C447C;
   font-weight: 500;
 }
 
 .userRole {
-  font-size: 10px;
-  color: #9aaac0;
+  font-size: 12px;
+  color: #a7b7c7;
 }

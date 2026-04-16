@@ -1,0 +1,55 @@
+/* barra superiore: occupa tutta la larghezza, allinea il contenuto */
+.topbar {
+  height: 93px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #a7b7c7;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+/* contenitore della searchbox con icona e input affiancati */
+.searchBox {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 5px;
+  border: 1.50px solid #378ADD;
+  padding: 8px 16px;
+  width: 500px;
+  gap: 12px;
+}
+
+/* campo di testo: niente bordi, sfondo trasparente */
+.searchInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #080808;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* testo del placeholder più tenue */
+.searchInput::placeholder {
+  color: #888;
+}
+
+/* pulsante X: niente sfondo, cursore pointer */
+.clearButton {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+}
+
+.clearButton:hover {
+  color: #fff;
+}
+
+.searchIcon {
+  color: #378ADD;
+  font-size: 16px;
+}
