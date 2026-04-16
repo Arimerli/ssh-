@@ -1,0 +1,10 @@
+/* contenitore principale che affianca sidebar e contenuto */
+.appContainer {
+  display: flex;
+}
+
+/* area del contenuto principale a destra della sidebar */
+.mainContent {
+  flex: 1;
+  padding: 20px;
+}
