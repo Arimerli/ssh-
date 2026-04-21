@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Components, Categories, Locations, Giacenze
+from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -28,4 +28,15 @@ class GiacenzaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Giacenze
+        fields = '__all__'
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tags
+        fields = '__all__'
+
+class TagComponentSerializer(serializers.ModelSerializer):
+    caratteristica = serializers.CharField(source='tag.caratteristica', read_only=True)
+    class Meta:
+        model = TagComponents
         fields = '__all__'

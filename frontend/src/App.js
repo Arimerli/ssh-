@@ -2,15 +2,17 @@
 /* BrowserRouter gestisce la navigazione tra pagine */
 /* Routes e Route definiscono quale componente mostrare per ogni indirizzo */
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { useState } from "react";
 /* importa i componenti nella pagina */
 import Sidebar from "./components/Sidebar";
 import Topbar from"./components/Topbar";
+import Componenti from "./pages/Componenti";
 
 /* importa il file CSS di questo componente */
 import styles from "./App.module.css";
 
 function App() {
+  const [searchQuery, setSearchQuery ] = useState("");
   return (
     /* BrowserRouter avvolge tutta l'app per abilitare la navigazione */
     <BrowserRouter>
@@ -21,14 +23,16 @@ function App() {
         {/* la sidebar appare su tutte le pagine */}
         <Sidebar />
         <div className={styles.rightColumn}>
-            <Topbar />
-            {/* area del contenuto principale */}
+            <Topbar
+                setSearchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+            />
             <div className={styles.mainContent}>
 
             {/* Routes decide quale pagina mostrare in base all'indirizzo */}
             <Routes>
                 {/* per ora mostriamo solo testi segnaposto */}
-                <Route path="/componenti" element={<h1>Pagina Componenti</h1>} />
+                <Route path="/componenti" element={<Componenti searchQuery={searchQuery} />} />
                 <Route path="/categorie" element={<h1>Pagina Categorie</h1>} />
                 <Route path="/posizioni" element={<h1>Pagina Posizioni</h1>} />
                 <Route path="/esperienze" element={<h1>Pagina Esperienze</h1>} />
@@ -38,7 +42,6 @@ function App() {
             </div>
         </div>
       </div>
-
     </BrowserRouter>
   );
 }

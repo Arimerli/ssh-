@@ -18,6 +18,11 @@
   --accent: #378ADD;
   --avatar-bg: #E6F1FB;
   --avatar-text: #185FA5;
+  --bg-card: #a3a2a2;
+  --border-card: #4775d1;
+  --nome-card: #0f0b54;
+  --scritte-card: #010003;
+  --tags-card: #85B7EB;
 }
 
 [data-theme='dark'] {
@@ -40,6 +45,11 @@
   --accent: #60a5fa;
   --avatar-bg: #1e3a5a;
   --avatar-text: #60a5fa;
+  --bg-card: #1e1e1e;
+  --border-card: #4775d1;;
+  --nome-card: #4775d1;;
+  --scritte-card: #010003;
+  --tags-card: #4775d1;;
 }
 
 body {

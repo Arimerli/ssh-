@@ -4,12 +4,7 @@ import styles from "./Topbar.module.css";
 import { LuSearch, LuX } from "react-icons/lu";
 import ThemeToggle from './ThemeToggle';
 
-function Topbar() {
-
-    /* searchQuery = testo nella barra
-       setSearchQuery = per l'aggionamento una volta digitata la ricerca */
-    const [searchQuery, setSearchQuery] = useState("");
-
+function Topbar({ searchQuery, setSearchQuery }) {
     return(
         <div className={styles.topbar}>
             <div className={styles.searchBox}>

@@ -9,3 +9,5 @@ export const getComponenti = () => api.get("/components/");
 export const getCategorie = () => api.get("/categories/");
 export const getLocations = () => api.get("/locations/");
 export const getGiacenze = () => api.get("/giacenze/");
+export const getTags = () => api.get("/tags/");
+export const getTagComponents = () => api.get("/tag-components/");

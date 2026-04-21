@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Components, Categories, Locations, Giacenze
-from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer
+from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents
+from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer, TagSerializer, TagComponentSerializer
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Categories.objects.all()
@@ -17,3 +17,11 @@ class ComponentViewSet(viewsets.ModelViewSet):
 class GiacenzaViewSet(viewsets.ModelViewSet):
     queryset = Giacenze.objects.all()
     serializer_class = GiacenzaSerializer
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tags.objects.all()
+    serializer_class = TagSerializer
+
+class TagComponentViewSet(viewsets.ModelViewSet):
+    queryset = TagComponents.objects.all()
+    serializer_class = TagComponentSerializer
