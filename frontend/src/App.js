@@ -1,19 +1,53 @@
 /* importa BrowserRouter e Routes da react-router-dom */
 /* BrowserRouter gestisce la navigazione tra pagine */
 /* Routes e Route definiscono quale componente mostrare per ogni indirizzo */
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
+import { useState, useEffect } from "react";
 /* importa i componenti nella pagina */
 import Sidebar from "./components/Sidebar";
 import Topbar from"./components/Topbar";
 import Componenti from "./pages/Componenti";
+import Login from "./pages/Login";
 
 /* importa il file CSS di questo componente */
 import styles from "./App.module.css";
+import { getUtenteCorrente } from "./api/api";
 
 function App() {
-  const [searchQuery, setSearchQuery ] = useState("");
-  return (
+    const [searchQuery, setSearchQuery ] = useState("");
+    const [utente, setUtente] = useState(null);
+    const [caricamento, setCaricamento] = useState(true);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // se c'è il token prende i dati dell'utente
+            getUtenteCorrente()
+                .then(res => setUtente(res.data))
+                .catch(() => {
+                    // se il token è scaduto lo rimuove
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('refresh');
+                })
+                .finally(() => setCaricamento(false));
+        } else {
+            setCaricamento(false);
+        }
+    }, []);
+
+    if (caricamento) return null;
+
+    if(!utente) {
+    return(
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<Login setUtente={setUtente} /> } />
+                <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+        </BrowserRouter>
+    )
+    }
+    return (
     /* BrowserRouter avvolge tutta l'app per abilitare la navigazione */
     <BrowserRouter>
 
@@ -43,7 +77,7 @@ function App() {
         </div>
       </div>
     </BrowserRouter>
-  );
+    );
 }
 
 export default App;
