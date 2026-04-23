@@ -67,5 +67,4 @@ def utente_login(request):
 @api_view(['POST'])
 #@csrf_exempt
 def utente_logout(request):
-    logout(request)
     return Response({'success': True})

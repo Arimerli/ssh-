@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUtente } from "../api/api";
+import { loginUtente, getUtenteCorrente } from "../api/api";
 import styles from "./Login.module.css";
 
 function Login({ setUtente }) {
@@ -15,7 +15,7 @@ function Login({ setUtente }) {
             localStorage.setItem('token', res.data.access);
             localStorage.setItem('refresh', res.data.refresh);
             const utenteRes = await getUtenteCorrente();
-            setUtente(res.data);
+            setUtente(utenteRes.data);
             navigate("/componenti");
         } catch (err) {
             setErrore("Username o password errati!!!");

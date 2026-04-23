@@ -4,6 +4,7 @@ const api = axios.create({ // istanza di axios che rende di base l'indirizzo di 
     baseURL: "http://localhost:8000/api",
 });
 
+//ogni volta che si fa una richiesta get o post parte questa funzione per controllare che ci sia un'autenticazione
 api.interceptors.request.use(config => {
     const token = localStorage.getItem('token');
     if (token) {

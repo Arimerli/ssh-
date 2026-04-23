@@ -67,6 +67,12 @@
   gap: 10px;
 }
 
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
 .userAvatar {
   width: 40px;
   height: 40px;
@@ -85,7 +91,7 @@
   font-size: 15px;
   color: var(--text-main);
   font-weight: 500;
-  text-align: right;
+  text-align: left;
 }
 
 .userRole {
@@ -100,4 +106,39 @@
   align-items: center;
   gap: 30px;
   padding-right: 20px;
+}
+
+.professori {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6fb1fc, #4364f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.amministratore {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.tecnici {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+}
+
+.logoutLink {
+    all: unset;
+    display: block;
+    margin-top: 2px;
+    font-size: 11px !important;
+    color: #8c8c8c;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.logoutLink:hover {
+    color: #ff4d4f;
+    text-decoration: underline;
 }

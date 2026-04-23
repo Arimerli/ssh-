@@ -23,7 +23,7 @@ function App() {
         if (token) {
             // se c'è il token prende i dati dell'utente
             getUtenteCorrente()
-                .then(res => setUtente(res.data))
+                .then(res => setUtente(res.data)) //se l'utente è gia loggato si riaggiorna setUtente
                 .catch(() => {
                     // se il token è scaduto lo rimuove
                     localStorage.removeItem('token');
@@ -58,8 +58,10 @@ function App() {
         <Sidebar />
         <div className={styles.rightColumn}>
             <Topbar
-                setSearchQuery={searchQuery}
+                SearchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
+                utente={utente}
+                setUtente={setUtente}
             />
             <div className={styles.mainContent}>
 
