@@ -1,20 +1,6 @@
 /* contenitore principale della pagina */
 .container {
-  padding: 24px;
-}
-
-/* barra in alto con titolo */
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-/* titolo della pagina */
-.titolo {
-  font-size: 20px;
-  font-weight: 500;
+  padding-top: 2px;
 }
 
 /* griglia di card — 3 colonne che si adattano */
@@ -22,4 +8,31 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 16px;
+}
+
+.tagBar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.tagItem {
+    padding: 6px 10px;
+    border-radius: 12px;
+    background: var(--bg-input);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.tagItem:hover {
+    background: #378ADD33;
+    color: #378ADD;
+}
+
+.active {
+    background: #378ADD;
+    color: white;
 }

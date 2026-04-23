@@ -1,34 +1,69 @@
 import { useState, useEffect } from "react";
-import { getComponenti , getCategorie , getTagComponents } from "../api/api"; //funzioni x le api di django comunicazione front-back
+import { getComponenti , getCategorie , getTagComponents, getTags } from "../api/api"; //funzioni x le api di django comunicazione front-back
 import styles from "./Componenti.module.css";
 import ComponenteCard from "../components/ComponenteCard";
 
 function Componenti({ searchQuery }) {
     const [componenti, setComponenti] = useState([]); //crea variabile componenti che permette di aggiornare la pagina ogni volta che setComponenti viene chiamata
     const [categorie, setCategorie] = useState([]);
-    const [tagComponents, setTagComponents] = useState([])
+    const [tagComponents, setTagComponents] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+
+    //se schiacciamo su uno lo mette o lo rimuove da selectedTags in base a se c'è o non c'è in precedenza
+    const toggleTag = (tagId) => {
+        setSelectedTags(prev =>
+            prev.includes(tagId)
+            ? prev.filter(id => id !== tagId)
+            :[...prev,tagId]
+        );
+    };
+
+    const componentiFiltrati = componenti
+    .filter(c =>
+        c.nome.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(c => {
+        if (selectedTags.length === 0) return true;
+
+        return selectedTags.every(tagId =>
+            c.tags?.some(tag => tag.id === tagId)
+        );
+    });
 
     useEffect(() => {
         getComponenti().then(res => setComponenti(res.data)); // prende i dati da getComponenti appena viene caricata la pagina
         getCategorie().then(res => setCategorie(res.data));
         getTagComponents().then(res => setTagComponents(res.data));
+        getTags().then(res => setTags(res.data));
     },[]);
-    const componentiFiltrati = componenti.filter( c => c.nome.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return (
-        <div className={styles.container}>
-            <div className={styles.toolbar}>
-                <h1 className={styles.titolo}>Componenti</h1>
-            </div>
-            <div className={styles.griglia}>
-                {componentiFiltrati.map(componente => (
-                    <ComponenteCard
-                    key={componente.id}
-                    componente={componente}
-                    categorie={categorie}
-                    tagComponents={tagComponents.filter(tc => tc.component === componente.id)}
-                    />
+        <div>
+            <div className={styles.tagBar}>
+                {tags.map(tag => (
+                    <span
+                        key={tag.id}
+                        onClick={() => toggleTag(tag.id)}
+                        className={`${styles.tagItem} ${
+                            selectedTags.includes(tag.id) ? styles.active : ""
+                        }`}
+                    >
+                        {tag.nome}
+                    </span>
                 ))}
+            </div>
+            <div className={styles.container}>
+                <div className={styles.griglia}>
+                    {componentiFiltrati.map(componente => (
+                        <ComponenteCard
+                        key={componente.id}
+                        componente={componente}
+                        categorie={categorie}
+                        tagComponents={tagComponents.filter(tc => tc.component === componente.id)}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );
