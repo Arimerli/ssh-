@@ -26,3 +26,5 @@ export const loginUtente = (username, password) =>
     api.post("/utente/login/", { username, password });
 
 export const logoutUtente = () => api.post("/utente/logout/");
+
+export default api;

@@ -8,6 +8,7 @@ import Sidebar from "./components/Sidebar";
 import Topbar from"./components/Topbar";
 import Componenti from "./pages/Componenti";
 import Login from "./pages/Login";
+import AggiungiComponente from "./pages/AggiungiComponente";
 
 /* importa il file CSS di questo componente */
 import styles from "./App.module.css";
@@ -58,7 +59,7 @@ function App() {
         <Sidebar />
         <div className={styles.rightColumn}>
             <Topbar
-                SearchQuery={searchQuery}
+                searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 utente={utente}
                 setUtente={setUtente}
@@ -68,7 +69,8 @@ function App() {
             {/* Routes decide quale pagina mostrare in base all'indirizzo */}
             <Routes>
                 {/* per ora mostriamo solo testi segnaposto */}
-                <Route path="/componenti" element={<Componenti searchQuery={searchQuery} />} />
+                <Route path="/componenti" element={<Componenti searchQuery={searchQuery} utente={utente} />} />
+                <Route path="/componenti/aggiungi" element={<AggiungiComponente />} />
                 <Route path="/categorie" element={<h1>Pagina Categorie</h1>} />
                 <Route path="/posizioni" element={<h1>Pagina Posizioni</h1>} />
                 <Route path="/esperienze" element={<h1>Pagina Esperienze</h1>} />

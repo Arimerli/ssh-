@@ -5,6 +5,7 @@
   --bg-input: #ffffff;
   --bg-hover: #f8fafc;
   --bg-active: #f0f4f9;
+  --bg-tags: #E9E8EC;
 
   /* Testi */
   --text-primary: #212529;
@@ -23,6 +24,7 @@
   --nome-card: #0f0b54;
   --scritte-card: #010003;
   --tags-card: #85B7EB;
+  --piu: #fff;
 }
 
 [data-theme='dark'] {
@@ -32,6 +34,7 @@
   --bg-input: #2d2d2d;
   --bg-hover: #2d2d2d;
   --bg-active: #252525;
+  --bg-tags: #2d2d2d;
 
   /* Testi Dark */
   --text-primary: #f8f9fa;
@@ -50,6 +53,7 @@
   --nome-card: #4775d1;;
   --scritte-card: #010003;
   --tags-card: #4775d1;;
+  --piu: black;
 }
 
 body {

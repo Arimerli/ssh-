@@ -41,29 +41,7 @@ def utente_corrente(request):
         'username': utente.username,
         'ruolo': gruppo.name if gruppo else None,
     })
-'''
-@api_view(['POST'])
-@csrf_exempt
-def utente_login(request):
-    username = request.data.get('username')
-    password = request.data.get('password')
 
-    utente = authenticate(request, username=username, password=password)
-
-    if utente is not None:
-        login(request,utente)
-        gruppo = utente.groups.first()
-        return Response({
-            'success': True,
-            'username': utente.username,
-            'ruolo': gruppo.name if gruppo else None,
-        })
-    else:
-        return Response({
-            'success': False,
-            'errore': 'Username o password errati'
-        }, status=400)
-'''
 @api_view(['POST'])
 #@csrf_exempt
 def utente_logout(request):

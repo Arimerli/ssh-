@@ -20,7 +20,7 @@
 .tagItem {
     padding: 6px 10px;
     border-radius: 12px;
-    background: var(--bg-input);
+    background: var(--bg-tags);
     color: var(--text-muted);
     cursor: pointer;
     font-size: 13px;
@@ -36,3 +36,4 @@
     background: #378ADD;
     color: white;
 }
+
