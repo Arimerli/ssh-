@@ -19,6 +19,7 @@ export const getLocations = () => api.get("/locations/");
 export const getGiacenze = () => api.get("/giacenze/");
 export const getGiacenzaComponente = (id) => api.get(`/giacenze/?componente=${id}`);
 export const aggiornaGiacenza = (id, data) => api.patch(`/giacenze/${id}/`, data);
+export const aggiornaComponente = (id, data) => api.patch(`/components/${id}/`, data);
 export const getTags = () => api.get("/tags/");
 export const getTagComponents = () => api.get("/tag-components/");
 export const getUtenteCorrente = () => api.get("/utente/");

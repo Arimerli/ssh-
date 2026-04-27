@@ -7,7 +7,6 @@ import {
     getLocations,
     getTags,
     getTagComponents,
-    aggiornaGiacenza
 } from "../api/api";
 import styles from "./DettaglioComponente.module.css";
 
@@ -43,14 +42,6 @@ function DettaglioComponente({ utente }) {
         return percorso;
     }
 
-    async function aggiornaQuantita(delta) {
-        if (!giacenza) return;
-        const nuovaQuantita = giacenza.quantita + delta;
-        if (nuovaQuantita < 0) return;
-        const res = await aggiornaGiacenza(giacenza.id, { quantita: nuovaQuantita });
-        setGiacenza(res.data);
-    }
-
     function coloreQuantita() {
         if (!giacenza) return styles.indicatoreGrigio;
         if (giacenza.quantita === 0) return styles.indicatoreRosso;
@@ -70,7 +61,7 @@ function DettaglioComponente({ utente }) {
 
     const linkDatasheet = componente.link ? (
         <a href={componente.link} target="_blank" rel="noreferrer" className={styles.datasheet}>
-            Datasheet
+            📄 Datasheet
         </a>
     ) : null;
 
@@ -120,45 +111,42 @@ function DettaglioComponente({ utente }) {
             {giacenza && (
                 <div className={styles.sezione}>
                     <div className={styles.sezioneLabel}>Giacenza</div>
-
-                    <div className={styles.quantitaRiga}>
-                        <div className={styles.quantitaBox}>
-                            <button className={styles.btnQuantita} onClick={() => aggiornaQuantita(-1)}>
-                                −
-                            </button>
-                            <div className={styles.quantitaValore}>
-                                <span className={`${styles.indicatore} ${coloreQuantita()}`} />
-                                <span className={styles.quantitaNumero}>{giacenza.quantita}</span>
-                                <span className={styles.quantitaLabel}>pezzi</span>
-                            </div>
-                            <button className={styles.btnQuantita} onClick={() => aggiornaQuantita(1)}>
-                                +
-                            </button>
-                        </div>
-                        <div className={styles.quantitaMin}>
-                            minimo: {giacenza.min_quantita}
-                        </div>
-                    </div>
-
-                    <div className={styles.campo}>
-                        <div className={styles.campoLabel}>Posizione</div>
-                        <div className={styles.breadcrumb}>
-                            {breadcrumbPosizione.map((loc, i) => (
-                                <span key={loc.id}>
-                                    {i > 0 && <span className={styles.freccia}>›</span>}
-                                    <span className={i === breadcrumbPosizione.length - 1 ? styles.breadcrumbAttivo : styles.breadcrumbItem}>
-                                        {loc.nome}
+                    <table className={styles.tabella}>
+                        <thead>
+                            <tr>
+                                <th className={styles.th}>Quantità</th>
+                                <th className={styles.th}>Minimo</th>
+                                <th className={styles.th}>Posizione</th>
+                                <th className={styles.th}>Scorta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td className={styles.td}>
+                                    <span className={`${styles.indicatore} ${coloreQuantita()}`} />
+                                    {giacenza.quantita}
+                                </td>
+                                <td className={styles.td}>
+                                    {giacenza.min_quantita}
+                                </td>
+                                <td className={styles.td}>
+                                    {breadcrumbPosizione.map((loc, i) => (
+                                        <span key={loc.id}>
+                                            {i > 0 && <span className={styles.freccia}>›</span>}
+                                            <span className={i === breadcrumbPosizione.length - 1 ? styles.breadcrumbAttivo : styles.breadcrumbItem}>
+                                                {loc.nome}
+                                            </span>
+                                        </span>
+                                    ))}
+                                </td>
+                                <td className={styles.td}>
+                                    <span className={giacenza.scorta ? styles.scortaSi : styles.scortaNo}>
+                                        {giacenza.scorta ? "✓ Sì" : "✗ No"}
                                     </span>
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className={styles.scorta}>
-                        <span className={giacenza.scorta ? styles.scortaSi : styles.scortaNo}>
-                            {giacenza.scorta ? "✓ Scorta presente" : "✗ Nessuna scorta"}
-                        </span>
-                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             )}
         </div>

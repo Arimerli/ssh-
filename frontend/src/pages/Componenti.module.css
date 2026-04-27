@@ -1,13 +1,11 @@
-/* contenitore principale della pagina */
 .container {
-  padding-top: 2px;
+    padding-top: 2px;
 }
 
-/* griglia di card — 3 colonne che si adattano */
 .griglia {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
 }
 
 .tagBar {
@@ -36,4 +34,3 @@
     background: #378ADD;
     color: white;
 }
-
