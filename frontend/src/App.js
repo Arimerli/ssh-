@@ -1,16 +1,12 @@
-/* importa BrowserRouter e Routes da react-router-dom */
-/* BrowserRouter gestisce la navigazione tra pagine */
-/* Routes e Route definiscono quale componente mostrare per ogni indirizzo */
 import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import { useState, useEffect } from "react";
-/* importa i componenti nella pagina */
 import Sidebar from "./components/Sidebar";
 import Topbar from"./components/Topbar";
 import Componenti from "./pages/Componenti";
 import Login from "./pages/Login";
 import AggiungiComponente from "./pages/AggiungiComponente";
+import DettaglioComponente from "./pages/DettaglioComponente";
 
-/* importa il file CSS di questo componente */
 import styles from "./App.module.css";
 import { getUtenteCorrente } from "./api/api";
 
@@ -22,11 +18,9 @@ function App() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // se c'è il token prende i dati dell'utente
             getUtenteCorrente()
-                .then(res => setUtente(res.data)) //se l'utente è gia loggato si riaggiorna setUtente
+                .then(res => setUtente(res.data))
                 .catch(() => {
-                    // se il token è scaduto lo rimuove
                     localStorage.removeItem('token');
                     localStorage.removeItem('refresh');
                 })
@@ -49,13 +43,8 @@ function App() {
     )
     }
     return (
-    /* BrowserRouter avvolge tutta l'app per abilitare la navigazione */
     <BrowserRouter>
-
-      {/* div esterno che mette sidebar e contenuto affiancati */}
       <div className={styles.appContainer}>
-
-        {/* la sidebar appare su tutte le pagine */}
         <Sidebar />
         <div className={styles.rightColumn}>
             <Topbar
@@ -65,12 +54,10 @@ function App() {
                 setUtente={setUtente}
             />
             <div className={styles.mainContent}>
-
-            {/* Routes decide quale pagina mostrare in base all'indirizzo */}
             <Routes>
-                {/* per ora mostriamo solo testi segnaposto */}
                 <Route path="/componenti" element={<Componenti searchQuery={searchQuery} utente={utente} />} />
                 <Route path="/componenti/aggiungi" element={<AggiungiComponente />} />
+                <Route path="/componenti/:id" element={<DettaglioComponente utente={utente} />} />
                 <Route path="/categorie" element={<h1>Pagina Categorie</h1>} />
                 <Route path="/posizioni" element={<h1>Pagina Posizioni</h1>} />
                 <Route path="/esperienze" element={<h1>Pagina Esperienze</h1>} />

@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
-
 import styles from "./ComponenteCard.module.css";
 
-function ComponenteCard({ componente, categorie, tagComponents }) {
+function ComponenteCard({ componente, categorie, tagComponents, tags = [] }) {
 
     const navigate = useNavigate();
 
@@ -29,11 +28,14 @@ function ComponenteCard({ componente, categorie, tagComponents }) {
             {costruisciPercorsoCategoria(componente.categoria)}
         </div>
         <div className={styles.tags}>
-            {tagComponents.map(tc => (
-                <span kay={tc.id} className={styles.tag}>
-                    {tc.caratteristica}
-                </span>
-            ))}
+            {tagComponents.map(tc => {
+                const tag = tags.find(t => t.id === tc.tag);
+                return tag ? (
+                    <span key={tc.id} className={styles.tag}>
+                        {tag.caratteristica}
+                    </span>
+                ) : null;
+            })}
         </div>
         </div>
     );
