@@ -10,10 +10,15 @@ router.register(r'locations', views.LocationViewSet)
 router.register(r'giacenze', views.GiacenzaViewSet)
 router.register(r'tags', views.TagViewSet)
 router.register(r'tag-components', views.TagComponentViewSet)
+router.register(r'log', views.LogViewSet)
 
 urlpatterns = router.urls + [
     path('utente/', views.utente_corrente),
     path('utente/login/', TokenObtainPairView.as_view()),
     path('utente/refresh/', TokenRefreshView.as_view()),
     path('utente/logout/', views.utente_logout),
+    path('utente/cambia-password/', views.cambia_password),
+    path('utente/<int:user_id>/reset-password/', views.reset_password),
+    path('utente/aggiorna-profilo/', views.aggiorna_profilo),
+    path('utente/crea/', views.crea_utente),
 ]

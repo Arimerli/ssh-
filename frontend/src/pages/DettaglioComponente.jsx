@@ -15,7 +15,7 @@ function DettaglioComponente({ utente }) {
     const navigate = useNavigate();
 
     const [componente, setComponente] = useState(null);
-    const [giacenza, setGiacenza] = useState(null);
+    const [giacenze, setGiacenze] = useState([]);
     const [categorie, setCategorie] = useState([]);
     const [locations, setLocations] = useState([]);
     const [tags, setTags] = useState([]);
@@ -23,9 +23,7 @@ function DettaglioComponente({ utente }) {
 
     useEffect(() => {
         getComponente(id).then(res => setComponente(res.data));
-        getGiacenzaComponente(id).then(res => {
-            if (res.data.length > 0) setGiacenza(res.data[0]);
-        });
+        getGiacenzaComponente(id).then(res => setGiacenze(res.data));
         getCategorie().then(res => setCategorie(res.data));
         getLocations().then(res => setLocations(res.data));
         getTags().then(res => setTags(res.data));
@@ -42,10 +40,9 @@ function DettaglioComponente({ utente }) {
         return percorso;
     }
 
-    function coloreQuantita() {
-        if (!giacenza) return styles.indicatoreGrigio;
-        if (giacenza.quantita === 0) return styles.indicatoreRosso;
-        if (giacenza.quantita <= giacenza.min_quantita) return styles.indicatoreGiallo;
+    function coloreQuantita(g) {
+        if (g.quantita === 0) return styles.indicatoreRosso;
+        if (g.quantita <= g.min_quantita) return styles.indicatoreGiallo;
         return styles.indicatoreVerde;
     }
 
@@ -57,7 +54,7 @@ function DettaglioComponente({ utente }) {
         .filter(Boolean);
 
     const breadcrumbCategoria = breadcrumb(categorie, componente.categoria);
-    const breadcrumbPosizione = giacenza ? breadcrumb(locations, giacenza.cassetto) : [];
+    const totale = giacenze.reduce((acc, g) => acc + g.quantita, 0);
 
     const linkDatasheet = componente.link ? (
         <a href={componente.link} target="_blank" rel="noreferrer" className={styles.datasheet}>
@@ -108,43 +105,49 @@ function DettaglioComponente({ utente }) {
                 </div>
             </div>
 
-            {giacenza && (
+            {giacenze.length > 0 && (
                 <div className={styles.sezione}>
-                    <div className={styles.sezioneLabel}>Giacenza</div>
+                    <div className={styles.sezioneLabelRow}>
+                        <div className={styles.sezioneLabel}>Giacenza</div>
+                        <span className={styles.totaleLabel}>Totale: <strong>{totale}</strong> pezzi</span>
+                    </div>
                     <table className={styles.tabella}>
                         <thead>
                             <tr>
+                                <th className={styles.th}>Posizione</th>
                                 <th className={styles.th}>Quantità</th>
                                 <th className={styles.th}>Minimo</th>
-                                <th className={styles.th}>Posizione</th>
                                 <th className={styles.th}>Scorta</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td className={styles.td}>
-                                    <span className={`${styles.indicatore} ${coloreQuantita()}`} />
-                                    {giacenza.quantita}
-                                </td>
-                                <td className={styles.td}>
-                                    {giacenza.min_quantita}
-                                </td>
-                                <td className={styles.td}>
-                                    {breadcrumbPosizione.map((loc, i) => (
-                                        <span key={loc.id}>
-                                            {i > 0 && <span className={styles.freccia}>›</span>}
-                                            <span className={i === breadcrumbPosizione.length - 1 ? styles.breadcrumbAttivo : styles.breadcrumbItem}>
-                                                {loc.nome}
+                            {giacenze.map((g, i) => {
+                                const pos = breadcrumb(locations, g.cassetto);
+                                return (
+                                    <tr key={g.id} className={i % 2 === 0 ? styles.trPari : styles.trDispari}>
+                                        <td className={styles.td}>
+                                            {pos.map((loc, j) => (
+                                                <span key={loc.id}>
+                                                    {j > 0 && <span className={styles.freccia}>›</span>}
+                                                    <span className={j === pos.length - 1 ? styles.breadcrumbAttivo : styles.breadcrumbItem}>
+                                                        {loc.nome}
+                                                    </span>
+                                                </span>
+                                            ))}
+                                        </td>
+                                        <td className={styles.td}>
+                                            <span className={`${styles.indicatore} ${coloreQuantita(g)}`} />
+                                            {g.quantita}
+                                        </td>
+                                        <td className={styles.td}>{g.min_quantita}</td>
+                                        <td className={styles.td}>
+                                            <span className={g.scorta ? styles.scortaSi : styles.scortaNo}>
+                                                {g.scorta ? "✓ Sì" : "✗ No"}
                                             </span>
-                                        </span>
-                                    ))}
-                                </td>
-                                <td className={styles.td}>
-                                    <span className={giacenza.scorta ? styles.scortaSi : styles.scortaNo}>
-                                        {giacenza.scorta ? "✓ Sì" : "✗ No"}
-                                    </span>
-                                </td>
-                            </tr>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

@@ -51,8 +51,17 @@ function Login({ setUtente }) {
                         onKeyDown={e => e.key === "Enter" && handleLogin()} //se premo invio prova il login
                     />
                 </div>
-                {errore && <div className={styles.errore}>{errore}</div>}
-
+                {errore && (
+                    <div>
+                        <div className={styles.errore}>{errore}</div>
+                        <a
+                            className={styles.contattoAdmin}
+                            href={`mailto:arianna.merli@fermi.mo.it?subject=Reset password&body=Salve, ho dimenticato la password. Il mio username è: ${username}`}
+                        >
+                            Hai dimenticato la password? Contatta l'amministartore →
+                        </a>
+                    </div>
+                )}
                 <button className={styles.bottone} onClick={handleLogin}>
                     Accedi
                 </button>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getComponenti, getCategorie, getTagComponents, getTags } from "../api/api";
 import styles from "./Componenti.module.css";
 import ComponenteCard from "../components/ComponenteCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Fab from "../components/Fab";
 
 function Componenti({ searchQuery, utente }) {
@@ -13,6 +13,11 @@ function Componenti({ searchQuery, utente }) {
     const [selectedTags, setSelectedTags] = useState([]);
     const navigate = useNavigate();
 
+    // legge il parametro "categoria" dall'URL
+    // es. /componenti?categoria=3 → categoriaFiltro = "3"
+    const [searchParams] = useSearchParams();
+    const categoriaFiltro = searchParams.get("categoria");
+
     const toggleTag = (tagId) => {
         setSelectedTags(prev =>
             prev.includes(tagId)
@@ -21,10 +26,30 @@ function Componenti({ searchQuery, utente }) {
         );
     };
 
+    // funzione che trova tutte le sottocategorie di una categoria
+    // serve perché se filtri "Passivi" vuoi vedere anche "Resistenze" e "THT"
+    function getTutteLeCategorie(categoriaId, tutteCategorie) {
+        const risultato = [parseInt(categoriaId)];
+        const figli = tutteCategorie.filter(c => c.parent === parseInt(categoriaId));
+        // per ogni figlio cerca ricorsivamente anche i suoi figli
+        figli.forEach(figlio => {
+            risultato.push(...getTutteLeCategorie(figlio.id, tutteCategorie));
+        });
+        return risultato;
+    }
+
     const componentiFiltrati = componenti
+        // filtra per testo di ricerca
         .filter(c =>
             c.nome.toLowerCase().includes((searchQuery || "").toLowerCase())
         )
+        // filtra per categoria dall'URL — include anche le sottocategorie
+        .filter(c => {
+            if (!categoriaFiltro) return true;
+            const categorieValide = getTutteLeCategorie(categoriaFiltro, categorie);
+            return categorieValide.includes(c.categoria);
+        })
+        // filtra per tag selezionati
         .filter(c => {
             if (selectedTags.length === 0) return true;
             const componentTagIds = tagComponents
@@ -54,7 +79,18 @@ function Componenti({ searchQuery, utente }) {
                         {tag.caratteristica}
                     </span>
                 ))}
+
+                {categoriaFiltro && (
+                    <span
+                        className={styles.categoriaBadge}
+                        onClick={() => navigate("/componenti")}
+                    >
+                        {categorie.find(c => c.id === parseInt(categoriaFiltro))?.nome}
+                        <span className={styles.badgeX}>×</span>
+                    </span>
+                )}
             </div>
+
             <div className={styles.container}>
                 <div className={styles.griglia}>
                     {componentiFiltrati.map(componente => (

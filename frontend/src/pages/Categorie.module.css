@@ -1,0 +1,93 @@
+.container {
+    height: 100%;
+    overflow: auto;
+    background: var(--bg-primary);
+    padding: 32px;
+}
+
+.lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.gruppo {
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-card);
+}
+
+.riga {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    gap: 16px;
+}
+
+.riga:hover {
+    background: var(--bg-hover);
+}
+
+.accent {
+    width: 4px;
+    height: 40px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.info {
+    flex: 1;
+}
+
+.nome {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.sottonomi {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.badge {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--bg-active);
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.freccia {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.freccia:hover {
+    background: var(--bg-active);
+    color: var(--accent);
+}
+
+.sottoLista {
+    border-top: 1px solid var(--border-color);
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}

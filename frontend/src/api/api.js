@@ -19,6 +19,7 @@ export const getLocations = () => api.get("/locations/");
 export const getGiacenze = () => api.get("/giacenze/");
 export const getGiacenzaComponente = (id) => api.get(`/giacenze/?componente=${id}`);
 export const aggiornaGiacenza = (id, data) => api.patch(`/giacenze/${id}/`, data);
+export const eliminaGiacenza = (id) => api.delete(`/giacenze/${id}/`);
 export const aggiornaComponente = (id, data) => api.patch(`/components/${id}/`, data);
 export const getTags = () => api.get("/tags/");
 export const getTagComponents = () => api.get("/tag-components/");
@@ -26,5 +27,17 @@ export const getUtenteCorrente = () => api.get("/utente/");
 export const loginUtente = (username, password) =>
     api.post("/utente/login/", { username, password });
 export const logoutUtente = () => api.post("/utente/logout/");
+export const cambiaPassword = (vecchia, nuova) =>
+    api.post('/utente/cambia-password', {
+        vecchia_password: vecchia,
+        nuova_password: nuova,
+    });
+export const resetPassword = (userId) =>
+    api.post(`/utente/${userId}/reset-password/`);
+export const aggiornaProfiloUtente = (email) =>
+    api.post('/utente/aggiorna-profilo/', { email });
+export const creaUtente = (dati) => api.post('/utente/crea/', dati);
+export const getLog = () => api.get("/log/");
+export const getLogUtente = (userId) => api.get(`/log/?utente=${userId}`);
 
 export default api;

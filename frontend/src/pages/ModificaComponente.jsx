@@ -9,6 +9,7 @@ import {
     getTagComponents,
     aggiornaComponente,
     aggiornaGiacenza,
+    eliminaGiacenza,
 } from "../api/api";
 import api from "../api/api";
 import styles from "./AggiungiComponente.module.css";
@@ -29,16 +30,24 @@ function ModificaComponente() {
     const [nuovoTag, setNuovoTag] = useState("");
     const [mostraNuovoTag, setMostraNuovoTag] = useState(false);
     const [locations, setLocations] = useState([]);
-    const [livelloLoc, setLivelloLoc] = useState([null]);
-    const [locationSelezionata, setLocationSelezionata] = useState(null);
-    const [quantita, setQuantita] = useState(0);
-    const [minQuantita, setMinQuantita] = useState(0);
     const [scorta, setScorta] = useState(false);
-    const [giacenzaId, setGiacenzaId] = useState(null);
+    const [giacenze, setGiacenze] = useState([]);
+    const [giacenzeOriginali, setGiacenzeOriginali] = useState([]);
     const [tagComponentsOriginali, setTagComponentsOriginali] = useState([]);
 
+    function costruisciLivelli(lista, itemId) {
+        const percorso = [];
+        let corrente = lista.find(x => x.id === itemId);
+        while (corrente) {
+            percorso.unshift(corrente.id);
+            corrente = lista.find(x => x.id === corrente.parent);
+        }
+        const ultimo = percorso[percorso.length - 1];
+        if (lista.some(x => x.parent === ultimo)) percorso.push(null);
+        return percorso;
+    }
+
     useEffect(() => {
-        // carica tutti i dati necessari
         Promise.all([
             getComponente(id),
             getGiacenzaComponente(id),
@@ -50,84 +59,88 @@ function ModificaComponente() {
             const comp = compRes.data;
             const cats = catRes.data;
             const locs = locRes.data;
-            const allTagComponents = tagCompRes.data;
 
-            // pre-compila dati base
             setNome(comp.nome);
             setLink(comp.link || "");
             setCategorie(cats);
             setLocations(locs);
             setTags(tagRes.data);
 
-            // pre-compila categoria a cascata
             if (comp.categoria) {
                 setCategoriaSelezionata(comp.categoria);
                 setLivelli(costruisciLivelli(cats, comp.categoria));
             }
 
-            // pre-compila giacenza
+            const giacenzeCaricate = giacRes.data.map(g => ({
+                id: g.id,
+                livelloLoc: costruisciLivelli(locs, g.cassetto),
+                locationSelezionata: g.cassetto,
+                quantita: g.quantita,
+                minQuantita: g.min_quantita,
+                nuova: false,
+            }));
+            setGiacenze(giacenzeCaricate);
+            setGiacenzeOriginali(giacenzeCaricate.map(g => g.id));
+
             if (giacRes.data.length > 0) {
-                const g = giacRes.data[0];
-                setGiacenzaId(g.id);
-                setQuantita(g.quantita);
-                setMinQuantita(g.min_quantita);
-                setScorta(g.scorta);
-                setLocationSelezionata(g.cassetto);
-                setLivelloLoc(costruisciLivelli(locs, g.cassetto));
+                setScorta(giacRes.data[0].scorta);
             }
 
-            // pre-compila tag selezionati
-            const tagIds = allTagComponents
+            const tagIds = tagCompRes.data
                 .filter(tc => tc.component === parseInt(id))
                 .map(tc => tc.tag);
             setTagSelezionati(tagIds);
-            setTagComponentsOriginali(allTagComponents.filter(tc => tc.component === parseInt(id)));
+            setTagComponentsOriginali(tagCompRes.data.filter(tc => tc.component === parseInt(id)));
         });
     }, [id]);
-
-    // costruisce la lista livelli risalendo i parent
-    function costruisciLivelli(lista, itemId) {
-        const percorso = [];
-        let corrente = lista.find(x => x.id === itemId);
-        while (corrente) {
-            percorso.unshift(corrente.id);
-            corrente = lista.find(x => x.id === corrente.parent);
-        }
-        // aggiunge null finale se l'ultimo ha figli
-        const ultimo = percorso[percorso.length - 1];
-        const haFigli = lista.some(x => x.parent === ultimo);
-        if (haFigli) percorso.push(null);
-        return percorso;
-    }
 
     function figli(lista, parentId) {
         return lista.filter(c => c.parent === parentId);
     }
 
-    function selezionaCategoria(livello, id) {
+    function selezionaCategoria(livello, catId) {
         const nuoviLivelli = [...livelli.slice(0, livello + 1)];
-        nuoviLivelli[livello] = id;
-        if (figli(categorie, id).length > 0) {
-            nuoviLivelli.push(null);
-        }
+        nuoviLivelli[livello] = catId;
+        if (figli(categorie, catId).length > 0) nuoviLivelli.push(null);
         setLivelli(nuoviLivelli);
-        setCategoriaSelezionata(id);
+        setCategoriaSelezionata(catId);
     }
 
-    function selezionaLocation(livello, id) {
-        const nuoviLivelli = [...livelloLoc.slice(0, livello + 1)];
-        nuoviLivelli[livello] = id;
-        if (figli(locations, id).length > 0) {
-            nuoviLivelli.push(null);
-        }
-        setLivelloLoc(nuoviLivelli);
-        setLocationSelezionata(id);
+    function selezionaLocation(giacenzaIndex, livello, locId) {
+        setGiacenze(prev => prev.map((g, i) => {
+            if (i !== giacenzaIndex) return g;
+            const nuoviLivelli = [...g.livelloLoc.slice(0, livello + 1)];
+            nuoviLivelli[livello] = locId;
+            if (figli(locations, locId).length > 0) nuoviLivelli.push(null);
+            return { ...g, livelloLoc: nuoviLivelli, locationSelezionata: locId };
+        }));
+    }
+
+    function aggiornaGiacenzaField(index, field, value) {
+        setGiacenze(prev => prev.map((g, i) =>
+            i === index ? { ...g, [field]: value } : g
+        ));
+    }
+
+    function aggiungiRigaGiacenza() {
+        setGiacenze(prev => [...prev, {
+            id: null,
+            livelloLoc: [null],
+            locationSelezionata: null,
+            quantita: 0,
+            minQuantita: 0,
+            nuova: true,
+        }]);
+    }
+
+    function rimuoviRigaGiacenza(index) {
+        setGiacenze(prev => prev.filter((_, i) => i !== index));
     }
 
     function toggleTag(tagId) {
         setTagSelezionati(prev =>
             prev.includes(tagId)
-                ? prev.filter(id => id !== tagId)
+                ? prev.filter(i => i !== tagId)
                 : [...prev, tagId]
         );
     }
@@ -153,31 +166,52 @@ function ModificaComponente() {
         setMostraNuovoTag(false);
     }
 
+    const totale = giacenze.reduce((acc, g) => acc + (parseInt(g.quantita) || 0), 0);
+
     async function salva() {
-        if (!nome.trim() || !categoriaSelezionata || !locationSelezionata) {
-            alert("Compila nome, categoria e posizione!");
+        if (!nome.trim() || !categoriaSelezionata) {
+            alert("Compila nome e categoria!");
+            return;
+        }
+        if (giacenze.some(g => !g.locationSelezionata)) {
+            alert("Seleziona la posizione per ogni giacenza!");
+            return;
+        }
+        const posizioni = giacenze.map(g => g.locationSelezionata);
+        if (new Set(posizioni).size !== posizioni.length) {
+            alert("Non puoi usare lo stesso cassetto due volte!");
             return;
         }
 
-        // aggiorna componente
         await aggiornaComponente(id, {
             nome,
             link,
             categoria: categoriaSelezionata,
-            pezzi: quantita,
+            pezzi: totale,
         });
 
-        // aggiorna giacenza
-        if (giacenzaId) {
-            await aggiornaGiacenza(giacenzaId, {
-                cassetto: locationSelezionata,
-                quantita,
-                min_quantita: minQuantita,
-                scorta,
-            });
+        const giacenzeAttualiIds = giacenze.filter(g => g.id).map(g => g.id);
+        for (const gId of giacenzeOriginali) {
+            if (!giacenzeAttualiIds.includes(gId)) {
+                await eliminaGiacenza(gId);
+            }
         }
 
-        // aggiorna tag — elimina quelli vecchi e aggiunge i nuovi
+        for (const g of giacenze) {
+            const payload = {
+                componente: parseInt(id),
+                cassetto: g.locationSelezionata,
+                quantita: parseInt(g.quantita) || 0,
+                min_quantita: parseInt(g.minQuantita) || 0,
+                scorta,
+            };
+            if (g.id) {
+                await aggiornaGiacenza(g.id, payload);
+            } else {
+                await api.post("/giacenze/", payload);
+            }
+        }
+
         for (const tc of tagComponentsOriginali) {
             await api.delete(`/tag-components/${tc.id}/`);
         }
@@ -294,52 +328,72 @@ function ModificaComponente() {
             </div>
 
             <div className={styles.sezione}>
-                <div className={styles.sezioneLabel}>Posizione</div>
-                <div className={styles.cascata}>
-                    {livelloLoc.map((selezionato, i) => {
-                        const parentId = i === 0 ? null : livelloLoc[i - 1];
-                        const opzioni = figli(locations, parentId);
-                        if (opzioni.length === 0) return null;
-                        return (
-                            <select
-                                key={i}
-                                className={styles.select}
-                                value={selezionato || ""}
-                                onChange={e => selezionaLocation(i, parseInt(e.target.value))}
-                            >
-                                <option value="">Seleziona...</option>
-                                {opzioni.map(l => (
-                                    <option key={l.id} value={l.id}>{l.nome}</option>
-                                ))}
-                            </select>
-                        );
-                    })}
+                <div className={styles.sezioneLabelRow}>
+                    <div className={styles.sezioneLabel}>Posizioni e giacenze</div>
+                    <span className={styles.totale}>Totale: {totale} pezzi</span>
                 </div>
-            </div>
 
-            <div className={styles.sezione}>
-                <div className={styles.sezioneLabel}>Giacenza</div>
-                <div className={styles.riga}>
-                    <div className={styles.campo}>
-                        <label className={styles.label}>Quantità</label>
-                        <input
-                            className={styles.inputNumero}
-                            type="number"
-                            value={quantita}
-                            onChange={e => setQuantita(parseInt(e.target.value))}
-                        />
+                {giacenze.map((g, index) => (
+                    <div key={index} className={styles.giacenzaRiga}>
+                        <div className={styles.giacenzaHeader}>
+                            <span className={styles.giacenzaNumero}>Posizione {index + 1}</span>
+                            {giacenze.length > 1 && (
+                                <button
+                                    className={styles.btnRimuovi}
+                                    onClick={() => rimuoviRigaGiacenza(index)}
+                                >
+                                    × Rimuovi
+                                </button>
+                            )}
+                        </div>
+                        <div className={styles.cascata}>
+                            {g.livelloLoc.map((selezionato, i) => {
+                                const parentId = i === 0 ? null : g.livelloLoc[i - 1];
+                                const opzioni = figli(locations, parentId);
+                                if (opzioni.length === 0) return null;
+                                return (
+                                    <select
+                                        key={i}
+                                        className={styles.select}
+                                        value={selezionato || ""}
+                                        onChange={e => selezionaLocation(index, i, parseInt(e.target.value))}
+                                    >
+                                        <option value="">Seleziona...</option>
+                                        {opzioni.map(l => (
+                                            <option key={l.id} value={l.id}>{l.nome}</option>
+                                        ))}
+                                    </select>
+                                );
+                            })}
+                        </div>
+                        <div className={styles.riga}>
+                            <div className={styles.campo}>
+                                <label className={styles.label}>Quantità</label>
+                                <input
+                                    className={styles.inputNumero}
+                                    type="number"
+                                    value={g.quantita}
+                                    onChange={e => aggiornaGiacenzaField(index, 'quantita', e.target.value)}
+                                />
+                            </div>
+                            <div className={styles.campo}>
+                                <label className={styles.label}>Quantità minima</label>
+                                <input
+                                    className={styles.inputNumero}
+                                    type="number"
+                                    value={g.minQuantita}
+                                    onChange={e => aggiornaGiacenzaField(index, 'minQuantita', e.target.value)}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className={styles.campo}>
-                        <label className={styles.label}>Quantità minima</label>
-                        <input
-                            className={styles.inputNumero}
-                            type="number"
-                            value={minQuantita}
-                            onChange={e => setMinQuantita(parseInt(e.target.value))}
-                        />
-                    </div>
-                </div>
-                <div className={styles.checkboxRiga}>
+                ))}
+
+                <button className={styles.btnAggiungiPosizione} onClick={aggiungiRigaGiacenza}>
+                    + Aggiungi posizione
+                </button>
+
+                <div className={styles.scortaRiga}>
                     <input
                         type="checkbox"
                         id="scorta"

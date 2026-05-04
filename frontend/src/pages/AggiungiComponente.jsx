@@ -19,11 +19,10 @@ function AggiungiComponente() {
     const [nuovoTag, setNuovoTag] = useState("");
     const [mostraNuovoTag, setMostraNuovoTag] = useState(false);
     const [locations, setLocations] = useState([]);
-    const [livelloLoc, setLivelloLoc] = useState([null]);
-    const [locationSelezionata, setLocationSelezionata] = useState(null);
-    const [quantita, setQuantita] = useState(0);
-    const [minQuantita, setMinQuantita] = useState(0);
     const [scorta, setScorta] = useState(false);
+    const [giacenze, setGiacenze] = useState([
+        { livelloLoc: [null], locationSelezionata: null, quantita: 0, minQuantita: 0 }
+    ]);
 
     useEffect(() => {
         getCategorie().then(res => setCategorie(res.data));
@@ -38,21 +37,38 @@ function AggiungiComponente() {
     function selezionaCategoria(livello, id) {
         const nuoviLivelli = [...livelli.slice(0, livello + 1)];
         nuoviLivelli[livello] = id;
-        if (figli(categorie, id).length > 0) {
-            nuoviLivelli.push(null);
-        }
+        if (figli(categorie, id).length > 0) nuoviLivelli.push(null);
         setLivelli(nuoviLivelli);
         setCategoriaSelezionata(id);
     }
 
-    function selezionaLocation(livello, id) {
-        const nuoviLivelli = [...livelloLoc.slice(0, livello + 1)];
-        nuoviLivelli[livello] = id;
-        if (figli(locations, id).length > 0) {
-            nuoviLivelli.push(null);
-        }
-        setLivelloLoc(nuoviLivelli);
-        setLocationSelezionata(id);
+    function selezionaLocation(giacenzaIndex, livello, id) {
+        setGiacenze(prev => prev.map((g, i) => {
+            if (i !== giacenzaIndex) return g;
+            const nuoviLivelli = [...g.livelloLoc.slice(0, livello + 1)];
+            nuoviLivelli[livello] = id;
+            if (figli(locations, id).length > 0) nuoviLivelli.push(null);
+            return { ...g, livelloLoc: nuoviLivelli, locationSelezionata: id };
+        }));
+    }
+
+    function aggiornaGiacenzaField(index, field, value) {
+        setGiacenze(prev => prev.map((g, i) =>
+            i === index ? { ...g, [field]: value } : g
+        ));
+    }
+
+    function aggiungiRigaGiacenza() {
+        setGiacenze(prev => [...prev, {
+            livelloLoc: [null],
+            locationSelezionata: null,
+            quantita: 0,
+            minQuantita: 0,
+        }]);
+    }
+
+    function rimuoviRigaGiacenza(index) {
+        setGiacenze(prev => prev.filter((_, i) => i !== index));
     }
 
     function toggleTag(tagId) {
@@ -84,37 +100,58 @@ function AggiungiComponente() {
         setMostraNuovoTag(false);
     }
 
+    const totale = giacenze.reduce((acc, g) => acc + (parseInt(g.quantita) || 0), 0);
+
     async function salva() {
-        if (!nome.trim() || !categoriaSelezionata || !locationSelezionata) {
-            alert("Compila nome, categoria e posizione!");
+        if (!nome.trim() || !categoriaSelezionata) {
+            alert("Compila nome e categoria!");
             return;
         }
+        if (giacenze.some(g => !g.locationSelezionata)) {
+            alert("Seleziona la posizione per ogni giacenza!");
+            return;
+        }
+
+        // controlla posizioni duplicate
+        const posizioni = giacenze.map(g => g.locationSelezionata);
+        const posizioniUniche = new Set(posizioni);
+        if (posizioniUniche.size !== posizioni.length) {
+            alert("Non puoi usare lo stesso cassetto due volte!");
+            return;
+        }
+
         const resComponente = await api.post("/components/", {
             nome,
             link,
             categoria: categoriaSelezionata,
-            pezzi: quantita,
+            pezzi: totale,
         });
+
         const componenteId = resComponente.data.id;
-        await api.post("/giacenze/", {
-            componente: componenteId,
-            cassetto: locationSelezionata,
-            quantita,
-            min_quantita: minQuantita,
-            scorta,
-        });
+
+        for (const g of giacenze) {
+            await api.post("/giacenze/", {
+                componente: componenteId,
+                cassetto: g.locationSelezionata,
+                quantita: parseInt(g.quantita) || 0,
+                min_quantita: parseInt(g.minQuantita) || 0,
+                scorta,
+            });
+        }
+
         for (const tagId of tagSelezionati) {
             await api.post("/tag-components/", {
                 tag: tagId,
                 component: componenteId,
             });
         }
+
         navigate("/componenti");
     }
 
     return (
         <div className={styles.container}>
-           <div className={styles.header}>
+            <div className={styles.header}>
                 <button className={styles.back} onClick={() => navigate("/componenti")}>
                     ← Torna indietro
                 </button>
@@ -216,52 +253,70 @@ function AggiungiComponente() {
             </div>
 
             <div className={styles.sezione}>
-                <div className={styles.sezioneLabel}>Posizione</div>
-                <div className={styles.cascata}>
-                    {livelloLoc.map((selezionato, i) => {
-                        const parentId = i === 0 ? null : livelloLoc[i - 1];
-                        const opzioni = figli(locations, parentId);
-                        if (opzioni.length === 0) return null;
-                        return (
-                            <select
-                                key={i}
-                                className={styles.select}
-                                value={selezionato || ""}
-                                onChange={e => selezionaLocation(i, parseInt(e.target.value))}
-                            >
-                                <option value="">Seleziona...</option>
-                                {opzioni.map(l => (
-                                    <option key={l.id} value={l.id}>{l.nome}</option>
-                                ))}
-                            </select>
-                        );
-                    })}
+                <div className={styles.sezioneLabelRow}>
+                    <div className={styles.sezioneLabel}>Posizioni e giacenze</div>
+                    <span className={styles.totale}>Totale: {totale} pezzi</span>
                 </div>
-            </div>
 
-            <div className={styles.sezione}>
-                <div className={styles.sezioneLabel}>Giacenza</div>
-                <div className={styles.riga}>
-                    <div className={styles.campo}>
-                        <label className={styles.label}>Quantità</label>
-                        <input
-                            className={styles.inputNumero}
-                            type="number"
-                            value={quantita}
-                            onChange={e => setQuantita(parseInt(e.target.value))}
-                        />
+                {giacenze.map((g, index) => (
+                    <div key={index} className={styles.giacenzaRiga}>
+                        <div className={styles.giacenzaHeader}>
+                            <span className={styles.giacenzaNumero}>Posizione {index + 1}</span>
+                            {giacenze.length > 1 && (
+                                <button className={styles.btnRimuovi} onClick={() => rimuoviRigaGiacenza(index)}>
+                                    × Rimuovi
+                                </button>
+                            )}
+                        </div>
+                        <div className={styles.cascata}>
+                            {g.livelloLoc.map((selezionato, i) => {
+                                const parentId = i === 0 ? null : g.livelloLoc[i - 1];
+                                const opzioni = figli(locations, parentId);
+                                if (opzioni.length === 0) return null;
+                                return (
+                                    <select
+                                        key={i}
+                                        className={styles.select}
+                                        value={selezionato || ""}
+                                        onChange={e => selezionaLocation(index, i, parseInt(e.target.value))}
+                                    >
+                                        <option value="">Seleziona...</option>
+                                        {opzioni.map(l => (
+                                            <option key={l.id} value={l.id}>{l.nome}</option>
+                                        ))}
+                                    </select>
+                                );
+                            })}
+                        </div>
+                        <div className={styles.riga}>
+                            <div className={styles.campo}>
+                                <label className={styles.label}>Quantità</label>
+                                <input
+                                    className={styles.inputNumero}
+                                    type="number"
+                                    value={g.quantita}
+                                    onChange={e => aggiornaGiacenzaField(index, 'quantita', e.target.value)}
+                                />
+                            </div>
+                            <div className={styles.campo}>
+                                <label className={styles.label}>Quantità minima</label>
+                                <input
+                                    className={styles.inputNumero}
+                                    type="number"
+                                    value={g.minQuantita}
+                                    onChange={e => aggiornaGiacenzaField(index, 'minQuantita', e.target.value)}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className={styles.campo}>
-                        <label className={styles.label}>Quantità minima</label>
-                        <input
-                            className={styles.inputNumero}
-                            type="number"
-                            value={minQuantita}
-                            onChange={e => setMinQuantita(parseInt(e.target.value))}
-                        />
-                    </div>
-                </div>
-                <div className={styles.checkboxRiga}>
+                ))}
+
+                <button className={styles.btnAggiungiPosizione} onClick={aggiungiRigaGiacenza}>
+                    + Aggiungi posizione
+                </button>
+
+                {/* scorta unica per tutto il componente */}
+                <div className={styles.scortaRiga}>
                     <input
                         type="checkbox"
                         id="scorta"

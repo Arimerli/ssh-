@@ -143,3 +143,11 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=8),  # il token dura 8 ore
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),   # il refresh token dura 7 giorni
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'arianna.merli@fermi.mo.it'
+EMAIL_HOST_PASSWORD = 'xbmlryepftsgfqel'
+DEFAULT_FROM_EMAIL = 'arianna.merli@fermi.mo.it'

@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import AggiungiComponente from "./pages/AggiungiComponente";
 import DettaglioComponente from "./pages/DettaglioComponente";
 import ModificaComponente from "./pages/ModificaComponente";
+import Categorie from "./pages/Categorie";
+import Impostazioni from "./pages/Impostazioni";
 
 import styles from "./App.module.css";
 import { getUtenteCorrente } from "./api/api";
@@ -61,11 +63,12 @@ function App() {
                             <Route path="/componenti/aggiungi" element={<AggiungiComponente />} />
                             <Route path="/componenti/:id" element={<DettaglioComponente utente={utente} />} />
                             <Route path="/componenti/:id/modifica" element={<ModificaComponente />} />
-                            <Route path="/categorie" element={<h1>Pagina Categorie</h1>} />
+                            <Route path="/categorie" element={<Categorie />} />
                             <Route path="/posizioni" element={<h1>Pagina Posizioni</h1>} />
                             <Route path="/esperienze" element={<h1>Pagina Esperienze</h1>} />
                             <Route path="/statistiche" element={<h1>Pagina Statistiche</h1>} />
                             <Route path="/utenti" element={<h1>Pagina Utenti</h1>} />
+                            <Route path="/impostazioni" element={<Impostazioni utente={utente} />} />
                         </Routes>
                     </div>
                 </div>
