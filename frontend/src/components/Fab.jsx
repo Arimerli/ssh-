@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./Fab.module.css";
 
-function Fab({ destination, utente, ruoli = ['Amministratore', 'Tecnico'] }) {
+function Fab({ destination, utente, ruoli = ['Amministratore', 'Tecnico'], onClick}) {
 
     const navigate = useNavigate();
 

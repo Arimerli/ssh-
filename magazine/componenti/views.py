@@ -17,25 +17,94 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Categories.objects.all()
     serializer_class = CategorySerializer
 
+    def perform_create(self, serializer):
+        categoria = serializer.save()
+        salva_log(self.request.user, 'Aggiunta', f'Categoria: {categoria.nome}')
+
+    def perform_update(self, serializer):
+        categoria = serializer.save()
+        salva_log(self.request.user, 'Modificata', f'Categoria: {categoria.nome}')
+
+    def perform_destroy(self, instance):
+        salva_log(self.request.user, 'Eliminata', f'Categoria: {instance.nome}')
+        instance.delete()
+
 class LocationViewSet(viewsets.ModelViewSet):
     queryset = Locations.objects.all()
     serializer_class = LocationSerializer
+
+    def perform_create(self, serializer):
+        location = serializer.save()
+        salva_log(self.request.user, 'Aggiunta', f'Posizione: {location.nome}')
+
+    def perform_update(self, serializer):
+        location = serializer.save()
+        salva_log(self.request.user, 'Modificata', f'Posizione: {location.nome}')
+
+    def perform_destroy(self, instance):
+        salva_log(self.request.user, 'Eliminata', f'Posizione: {instance.nome}')
+        instance.delete()
 
 class ComponentViewSet(viewsets.ModelViewSet):
     queryset = Components.objects.all()
     serializer_class = ComponentSerializer
 
+    def perform_create(self, serializer):
+        componente = serializer.save()
+        salva_log(self.request.user, 'Aggiunto', f'Componente: {componente.nome}')
+
+    def perform_update(self, serializer):
+        componente = serializer.save()
+        salva_log(self.request.user, 'Modificato', f'Componente: {componente.nome}')
+
+    def perform_destroy(self, instance):
+        salva_log(self.request.user, 'Eliminato', f'Componente: {instance.nome}')
+        instance.delete()
+
 class GiacenzaViewSet(viewsets.ModelViewSet):
     queryset = Giacenze.objects.all()
     serializer_class = GiacenzaSerializer
+
+    def perform_create(self, serializer):
+        giacenza = serializer.save()
+        salva_log(self.request.user, 'Aggiunta', f'Giacenza componente id:{giacenza.componente.nome}')
+
+    def perform_update(self, serializer):
+        giacenza = serializer.save()
+        salva_log(self.request.user, 'Modificata', f'Giacenza componente: {giacenza.componente.nome}')
+
+    def perform_destroy(self, instance):
+        salva_log(self.request.user, 'Eliminata', f'Giacenza componente: {instance.componente.nome}')
+        instance.delete()
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tags.objects.all()
     serializer_class = TagSerializer
 
+    def perform_create(self, serializer):
+        tag = serializer.save()
+        salva_log(self.request.user, 'Aggiunto', f'Tag: {tag.caratteristica}')
+
+    def perform_update(self, serializer):
+        tag = serializer.save()
+        salva_log(self.request.user, 'Modificato', f'Tag: {tag.caratteristica}')
+
+    def perform_destroy(self, instance):
+        salva_log(self.request.user, 'Eliminato', f'Tag: {instance.caratteristica}')
+        instance.delete()
+
 class TagComponentViewSet(viewsets.ModelViewSet):
     queryset = TagComponents.objects.all()
     serializer_class = TagComponentSerializer
+
+    def perform_create(self, serializer):
+        tc = serializer.save()
+        salva_log(self.request.user, 'Aggiunto', f'Tag {tc.tag.caratteristica} al componente {tc.component.nome}')
+
+    def perform_destroy(self, instance):
+        salva_log(self.request.user, 'Rimosso',
+                  f'Tag {instance.tag.caratteristica} dal componente {instance.component.nome}')
+        instance.delete()
 
 class LogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Log.objects.all()
@@ -170,3 +239,84 @@ def crea_utente(request):
         )
 
     return Response({'success': True})
+
+def salva_log(utente, azione, oggetto):
+    Log.objects.create(
+        utente=utente,
+        azione=azione,
+        oggetto=oggetto,
+    )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def lista_utenti(request):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name != 'Amministratore':
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    utenti = User.objects.all().prefetch_related('groups')
+    data = [{
+        'id': u.id,
+        'username': u.username,
+        'email': u.email,
+        'first_name': u.first_name,
+        'last_name': u.last_name,
+        'groups': [{'name': g.name} for g in u.groups.all()],
+    } for u in utenti]
+    return Response(data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def aggiorna_profilo(request):
+    user = request.user
+    email = request.data.get('email')
+    first_name = request.data.get('first_name', '')
+    last_name = request.data.get('last_name', '')
+
+    if not email:
+        return Response({'errore': 'Email obbligatoria'}, status=400)
+
+    if User.objects.filter(email=email).exclude(id=user.id).exists():
+        return Response({'errore': 'Email già in uso'}, status=400)
+
+    user.email = email
+    user.username = email
+    user.first_name = first_name
+    user.last_name = last_name
+    user.save()
+
+    return Response({'success': True})
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def aggiorna_utente(request, pk):
+    if not request.user.groups.filter(name='Amministratore').exists():
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        user = User.objects.get(id=pk)
+    except User.DoesNotExist:
+        return Response({'errore': 'Utente non trovato'}, status=404)
+
+    user.email = request.data.get('email', user.email)
+    user.username = user.email
+    user.first_name = request.data.get('first_name', user.first_name)
+    user.last_name = request.data.get('last_name', user.last_name)
+
+    user.save()
+    return Response({'success': True})
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def elimina_utente(request, pk):
+    if not request.user.groups.filter(name='Amministratore').exists():
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        user = User.objects.get(id=pk)
+        user.delete()
+        return Response({'success': True})
+    except User.DoesNotExist:
+        return Response({'errore': 'Utente non trovato'}, status=404)
+

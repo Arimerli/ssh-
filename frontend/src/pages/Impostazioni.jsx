@@ -9,8 +9,6 @@ function Impostazioni({ utente, setUtente }) {
     const [confermaPassword, setConfermaPassword] = useState("");
     const [messaggioPassword, setMessaggioPassword] = useState(null);
     const [errorePassword, setErrorePassword] = useState(null);
-
-    const [email, setEmail] = useState(utente?.email || "");
     const [messaggioEmail, setMessaggioEmail] = useState(null);
     const [erroreEmail, setErroreEmail] = useState(null);
 
@@ -38,6 +36,8 @@ function Impostazioni({ utente, setUtente }) {
             setErrorePassword(err.response?.data?.errore || "Errore durante il cambio password");
         }
     }
+
+
 
     return (
         <div className={styles.container}>

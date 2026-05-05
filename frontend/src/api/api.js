@@ -28,16 +28,22 @@ export const loginUtente = (username, password) =>
     api.post("/utente/login/", { username, password });
 export const logoutUtente = () => api.post("/utente/logout/");
 export const cambiaPassword = (vecchia, nuova) =>
-    api.post('/utente/cambia-password', {
+    api.post('/utente/cambia-password/', {
         vecchia_password: vecchia,
         nuova_password: nuova,
     });
 export const resetPassword = (userId) =>
     api.post(`/utente/${userId}/reset-password/`);
-export const aggiornaProfiloUtente = (email) =>
-    api.post('/utente/aggiorna-profilo/', { email });
 export const creaUtente = (dati) => api.post('/utente/crea/', dati);
 export const getLog = () => api.get("/log/");
 export const getLogUtente = (userId) => api.get(`/log/?utente=${userId}`);
+export const getUtenti = () => api.get("/utenti/");
+export const aggiornaProfiloUtente = (data) => api.post("/utente/aggiorna-profilo/", data);
+
+export const aggiornaUtente = (id, data) =>
+    api.patch(`/utenti/${id}/aggiorna/`, data);
+
+export const eliminaUtente = (id) =>
+    api.delete(`/utenti/${id}/elimina/`);
 
 export default api;
