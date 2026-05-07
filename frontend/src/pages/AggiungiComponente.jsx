@@ -112,7 +112,6 @@ function AggiungiComponente() {
             return;
         }
 
-        // controlla posizioni duplicate
         const posizioni = giacenze.map(g => g.locationSelezionata);
         const posizioniUniche = new Set(posizioni);
         if (posizioniUniche.size !== posizioni.length) {

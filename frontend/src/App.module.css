@@ -1,24 +1,29 @@
-/* contenitore principale che affianca sidebar e contenuto */
 .appContainer {
-  display: flex;
-  min-height: 100vh;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background-color0.3s ease;
-  overflow: hidden;
-}
-
-/* area del contenuto principale a destra della sidebar */
-.mainContent {
-  flex: 1;
-  padding: 20px;
-  background-color: var(--bg-primary);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
 }
 
 .rightColumn {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-  border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    height: 100vh;
+    overflow: hidden;
+    border-left: 1px solid var(--border-color);
+}
+
+.mainContent {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    scrollbar-width: none;
+    padding: 20px;
+}
+
+.mainContent::-webkit-scrollbar {
+    display: none;
 }

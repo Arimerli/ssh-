@@ -73,7 +73,7 @@ function Topbar({ searchQuery, setSearchQuery, utente, setUtente}) {
                 <div className={styles.userArea}>
                     <div className={`${styles.userAvatar} ${getAvatarClass(utente?.ruolo)}`}>{getInitials(utente?.ruolo)}</div>
                     <div>
-                        <div className={styles.userName}>{utente?.username}</div>
+                        <div className={styles.userName}>{utente?.nome} {utente?.cognome}</div>
                         <div className={styles.userRole}>{utente?.ruolo}</div>
                         <span className={styles.logoutLink} onClick={handleLogout}>
                             <LuLogOut />

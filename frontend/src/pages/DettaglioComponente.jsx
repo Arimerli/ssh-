@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
     getComponente,
-    getGiacenzaComponente,
+    getGiacenze,
     getCategorie,
     getLocations,
     getTags,
     getTagComponents,
 } from "../api/api";
+import api from "../api/api";
 import styles from "./DettaglioComponente.module.css";
 
 function DettaglioComponente({ utente }) {
@@ -21,15 +22,25 @@ function DettaglioComponente({ utente }) {
     const [tags, setTags] = useState([]);
     const [tagComponents, setTagComponents] = useState([]);
 
-    useEffect(() => {
-        getComponente(id).then(res => setComponente(res.data));
-        getGiacenzaComponente(id).then(res => setGiacenze(res.data));
-        getCategorie().then(res => setCategorie(res.data));
-        getLocations().then(res => setLocations(res.data));
-        getTags().then(res => setTags(res.data));
-        getTagComponents().then(res => setTagComponents(res.data));
-    }, [id]);
+    const [tutteGiacenze, setTutteGiacenze] = useState([]);
 
+useEffect(() => {
+    getComponente(id).then(res => setComponente(res.data));
+    getGiacenze().then(res => {
+        const filtrate = res.data.filter(g => g.componente === parseInt(id));
+        setGiacenze(filtrate);
+    });
+    getCategorie().then(res => setCategorie(res.data));
+    getLocations().then(res => setLocations(res.data));
+    getTags().then(res => setTags(res.data));
+    getTagComponents().then(res => setTagComponents(res.data));
+}, [id]);
+
+    async function handleElimina() {
+        if (!window.confirm(`Sei sicuro di voler eliminare "${componente.nome}"?`)) return;
+        await api.delete(`/components/${id}/`);
+        navigate("/componenti");
+    }
     function breadcrumb(lista, itemId) {
         const percorso = [];
         let corrente = lista.find(x => x.id === itemId);
@@ -70,12 +81,20 @@ function DettaglioComponente({ utente }) {
                     ← Torna indietro
                 </button>
                 {(utente?.ruolo === 'Amministratore' || utente?.ruolo === 'Tecnico') && (
-                    <button
-                        className={styles.btnModifica}
-                        onClick={() => navigate(`/componenti/${id}/modifica`)}
-                    >
-                        Modifica
-                    </button>
+                    <div className={styles.headerAzioni}>
+                        <button
+                            className={styles.btnModifica}
+                            onClick={() => navigate(`/componenti/${id}/modifica`)}
+                        >
+                            Modifica
+                        </button>
+                        <button
+                            className={styles.btnElimina}
+                            onClick={handleElimina}
+                        >
+                            Elimina
+                        </button>
+                    </div>
                 )}
             </div>
 

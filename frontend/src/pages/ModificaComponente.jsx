@@ -71,14 +71,16 @@ function ModificaComponente() {
                 setLivelli(costruisciLivelli(cats, comp.categoria));
             }
 
-            const giacenzeCaricate = giacRes.data.map(g => ({
-                id: g.id,
-                livelloLoc: costruisciLivelli(locs, g.cassetto),
-                locationSelezionata: g.cassetto,
-                quantita: g.quantita,
-                minQuantita: g.min_quantita,
-                nuova: false,
-            }));
+            const giacenzeCaricate = giacRes.data
+                .filter(g => g.componente === parseInt(id))
+                .map(g => ({
+                    id: g.id,
+                    livelloLoc: costruisciLivelli(locs, g.cassetto),
+                    locationSelezionata: g.cassetto,
+                    quantita: g.quantita,
+                    minQuantita: g.min_quantita,
+                    nuova: false,
+                }));
             setGiacenze(giacenzeCaricate);
             setGiacenzeOriginali(giacenzeCaricate.map(g => g.id));
 

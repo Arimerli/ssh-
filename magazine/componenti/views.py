@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents
 from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer, TagSerializer, TagComponentSerializer
 from django.contrib.auth import logout, update_session_auth_hash
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents, Log
@@ -58,7 +58,10 @@ class ComponentViewSet(viewsets.ModelViewSet):
         salva_log(self.request.user, 'Modificato', f'Componente: {componente.nome}')
 
     def perform_destroy(self, instance):
-        salva_log(self.request.user, 'Eliminato', f'Componente: {instance.nome}')
+        nome = instance.nome
+        Giacenze.objects.filter(componente=instance).delete()
+        TagComponents.objects.filter(component=instance).delete()
+        salva_log(self.request.user, 'Eliminato', f'Componente: {nome}')
         instance.delete()
 
 class GiacenzaViewSet(viewsets.ModelViewSet):
@@ -198,8 +201,6 @@ def crea_utente(request):
     ruolo = request.data.get('ruolo')
     password_temp = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
 
-    # ricava nome e cognome dall'email
-    # es. merli.arianna@fermi.mo.it → cognome=Merli, nome=Arianna
     try:
         parte_locale = email.split('@')[0]
         parti = parte_locale.split('.')
@@ -291,21 +292,37 @@ def aggiorna_profilo(request):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def aggiorna_utente(request, pk):
-    if not request.user.groups.filter(name='Amministratore').exists():
-        return Response({'errore': 'Non autorizzato'}, status=403)
+    if not request.user.groups.filter(name="Amministratore").exists():
+        return Response(status=403)
 
-    try:
-        user = User.objects.get(id=pk)
-    except User.DoesNotExist:
-        return Response({'errore': 'Utente non trovato'}, status=404)
+    user = User.objects.get(id=pk)
 
-    user.email = request.data.get('email', user.email)
-    user.username = user.email
-    user.first_name = request.data.get('first_name', user.first_name)
-    user.last_name = request.data.get('last_name', user.last_name)
+    email = request.data.get("email")
+    ruolo = request.data.get("ruolo")
+
+    if email:
+        user.email = email
+        user.username = email
+
+        try:
+            parte = email.split("@")[0]
+            cognome, nome = parte.split(".")
+            user.first_name = nome.capitalize()
+            user.last_name = cognome.capitalize()
+        except:
+            pass
+
+    if ruolo:
+        user.groups.clear()
+        try:
+            group = Group.objects.get(name=ruolo)
+            user.groups.add(group)
+        except Group.DoesNotExist:
+            pass
 
     user.save()
-    return Response({'success': True})
+
+    return Response({"success": True})
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])

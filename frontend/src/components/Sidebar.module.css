@@ -1,11 +1,18 @@
 .sidebar {
-  width: 200px;
-  min-height: 100vh;
-  background: var(--bg-sidebar);
-  border-right: 0.5px solid var(--border-color);
-  display: flex;
-  z-index: 10;
-  flex-direction: column;
+    width: 200px;
+    height: 100vh;
+    background: var(--bg-sidebar);
+    border-right: 0.5px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    z-index: 10;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
 }
 
 .logoArea {
