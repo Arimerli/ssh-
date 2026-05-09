@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents, Log
 from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer, TagSerializer, TagComponentSerializer, LogSerializer
+from django.views.decorators.csrf import csrf_exempt
 import random
 import string
 
@@ -210,7 +211,6 @@ def crea_utente(request):
         nome = ''
         cognome = ''
 
-    # usa l'email come username
     username = email
 
     if User.objects.filter(username=username).exists():
@@ -336,4 +336,39 @@ def elimina_utente(request, pk):
         return Response({'success': True})
     except User.DoesNotExist:
         return Response({'errore': 'Utente non trovato'}, status=404)
+
+@csrf_exempt
+@api_view(['POST'])
+def richiedi_reset_password(request):
+    email = request.data.get('email')
+
+    try:
+        utente = User.objects.get(username=email)
+    except User.DoesNotExist:
+        return Response({'success': True})
+
+    gruppo = utente.groups.first()
+    amministratore = gruppo and gruppo.name == 'Amministratore'
+
+    if amministratore:
+        password_temp = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+        utente.set_password(password_temp)
+        utente.save()
+        send_mail(
+            subject='Reset password - AjaksInventory',
+            message=f"Salve{utente.first_name},\nquella che segue è il reset della password da lei richiesto: \n{password_temp}\n si raccomanda di cambiarla immediatamente dalla pagina impostazioni una volta entrato, \n AjaksInventory - ITIS E. Fermi Modena",
+            from_email = settings.DEFAULT_FROM_EMAIL,
+            recipient_list = [email],
+        )
+    else:
+        admin = User.objects.filter(groups__name='Amministratore').first()
+        if admin and admin.email:
+            send_mail(
+                subject='Richiesta reset password - AjaksInventory',
+                message=f'Salve, \nutente {utente.first_name} {utente.last_name} ({email}) ha richiesto il reset della password. \nAjaksInventory - ITIS E. Fermi Modena',
+                from_email = settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[admin.email],
+            )
+    return Response({'success': True})
+
 

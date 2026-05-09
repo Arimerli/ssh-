@@ -46,4 +46,7 @@ export const aggiornaUtente = (id, data) =>
 export const eliminaUtente = (id) =>
     api.delete(`/utenti/${id}/elimina/`);
 
+export const richiediResetPassword = (email) =>
+    api.post('/utente/richiedi-reset/', { email });
+
 export default api;

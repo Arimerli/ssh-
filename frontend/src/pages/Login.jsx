@@ -54,12 +54,12 @@ function Login({ setUtente }) {
                 {errore && (
                     <div>
                         <div className={styles.errore}>{errore}</div>
-                        <a
+                        <button
                             className={styles.contattoAdmin}
-                            href={`mailto:arianna.merli@fermi.mo.it?subject=Reset password&body=Salve, ho dimenticato la password. Il mio username è: ${username}`}
+                            onClick={() => navigate("/reset-password")}
                         >
-                            Hai dimenticato la password? Contatta l'amministartore →
-                        </a>
+                            Hai dimenticato la password? Clicca qui
+                        </button>
                     </div>
                 )}
                 <button className={styles.bottone} onClick={handleLogin}>

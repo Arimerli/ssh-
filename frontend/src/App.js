@@ -11,6 +11,7 @@ import Categorie from "./pages/Categorie";
 import Impostazioni from "./pages/Impostazioni";
 import Utenti from "./pages/Utenti";
 import AggiungiUtente from "./pages/AggiungiUtente";
+import ResetPassword from "./pages/ResetPassword";
 
 import styles from "./App.module.css";
 import { getUtenteCorrente } from "./api/api";
@@ -42,6 +43,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/login" element={<Login setUtente={setUtente} />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
             </BrowserRouter>

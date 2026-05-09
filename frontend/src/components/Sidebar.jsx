@@ -4,7 +4,6 @@ import styles from "./Sidebar.module.css";
 function Sidebar() {
     return(
         <div className={styles.sidebar}>
-
             <div className={styles.logoArea}>
                 <div className={styles.logoTitle}>
                     <span>Ajaks</span>inventory
