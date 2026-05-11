@@ -26,4 +26,5 @@ urlpatterns = router.urls + [
     path('utenti/<int:pk>/aggiorna/', views.aggiorna_utente),
     path('utenti/<int:pk>/elimina/', views.elimina_utente),
     path('utente/richiedi-reset/', views.richiedi_reset_password),
+    path('posizioni/crea/', views.crea_posizione_completa),
 ]

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getComponenti, getCategorie, getTagComponents, getTags } from "../api/api";
+import { getComponenti, getCategorie, getTagComponents, getTags, getLocations, getGiacenze } from "../api/api";
 import styles from "./Componenti.module.css";
 import ComponenteCard from "../components/ComponenteCard";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -11,12 +11,13 @@ function Componenti({ searchQuery, utente }) {
     const [tagComponents, setTagComponents] = useState([]);
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
+    const [locations, setLocations] = useState([]);
+    const [giacenze, setGiacenze] = useState([]);
     const navigate = useNavigate();
 
-    // legge il parametro "categoria" dall'URL
-    // es. /componenti?categoria=3 → categoriaFiltro = "3"
     const [searchParams] = useSearchParams();
     const categoriaFiltro = searchParams.get("categoria");
+    const posizioneFiltro = searchParams.get("posizione");
 
     const toggleTag = (tagId) => {
         setSelectedTags(prev =>
@@ -26,30 +27,41 @@ function Componenti({ searchQuery, utente }) {
         );
     };
 
-    // funzione che trova tutte le sottocategorie di una categoria
-    // serve perché se filtri "Passivi" vuoi vedere anche "Resistenze" e "THT"
     function getTutteLeCategorie(categoriaId, tutteCategorie) {
         const risultato = [parseInt(categoriaId)];
         const figli = tutteCategorie.filter(c => c.parent === parseInt(categoriaId));
-        // per ogni figlio cerca ricorsivamente anche i suoi figli
         figli.forEach(figlio => {
             risultato.push(...getTutteLeCategorie(figlio.id, tutteCategorie));
         });
         return risultato;
     }
 
+    function getTutteLePosizioni(posizioneId, tutteLocations) {
+        const risultato = [parseInt(posizioneId)];
+        const figli = tutteLocations.filter(l => l.parent === parseInt(posizioneId));
+        figli.forEach(figlio => {
+            risultato.push(...getTutteLePosizioni(figlio.id, tutteLocations));
+        });
+        return risultato;
+    }
+
     const componentiFiltrati = componenti
-        // filtra per testo di ricerca
         .filter(c =>
             c.nome.toLowerCase().includes((searchQuery || "").toLowerCase())
         )
-        // filtra per categoria dall'URL — include anche le sottocategorie
         .filter(c => {
             if (!categoriaFiltro) return true;
             const categorieValide = getTutteLeCategorie(categoriaFiltro, categorie);
             return categorieValide.includes(c.categoria);
         })
-        // filtra per tag selezionati
+        .filter(c => {
+            if (!posizioneFiltro) return true;
+            const posizioniValide = getTutteLePosizioni(posizioneFiltro, locations);
+            const giacenzeComponente = giacenze
+                .filter(g => g.componente === c.id)
+                .map(g => g.cassetto);
+            return giacenzeComponente.some(cassetto => posizioniValide.includes(cassetto));
+        })
         .filter(c => {
             if (selectedTags.length === 0) return true;
             const componentTagIds = tagComponents
@@ -63,6 +75,8 @@ function Componenti({ searchQuery, utente }) {
         getCategorie().then(res => setCategorie(res.data));
         getTagComponents().then(res => setTagComponents(res.data));
         getTags().then(res => setTags(res.data));
+        getLocations().then(res => setLocations(res.data));
+        getGiacenze().then(res => setGiacenze(res.data));
     }, []);
 
     return (
@@ -86,6 +100,16 @@ function Componenti({ searchQuery, utente }) {
                         onClick={() => navigate("/componenti")}
                     >
                         {categorie.find(c => c.id === parseInt(categoriaFiltro))?.nome}
+                        <span className={styles.badgeX}>×</span>
+                    </span>
+                )}
+
+                {posizioneFiltro && (
+                    <span
+                        className={styles.categoriaBadge}
+                        onClick={() => navigate("/componenti")}
+                    >
+                        {locations.find(l => l.id === parseInt(posizioneFiltro))?.nome}
                         <span className={styles.badgeX}>×</span>
                     </span>
                 )}

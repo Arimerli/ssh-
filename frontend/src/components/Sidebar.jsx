@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 
-function Sidebar() {
+function Sidebar({ utente }) {
     return(
         <div className={styles.sidebar}>
             <div className={styles.logoArea}>
@@ -27,7 +27,11 @@ function Sidebar() {
 
                 <div className={styles.navGroup}>
                     <div className={styles.navGroupLabel}>Gestione</div>
-                        <NavLink to="/utenti" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}>Utenti</NavLink>
+                        {utente?.ruolo === 'Amministratore' && (
+                            <NavLink to="/utenti" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}>
+                                Utenti
+                            </NavLink>
+                        )}
                         <NavLink to="/impostazioni" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}>Impostazioni</NavLink>
                 </div>
             </nav>

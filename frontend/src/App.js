@@ -12,6 +12,7 @@ import Impostazioni from "./pages/Impostazioni";
 import Utenti from "./pages/Utenti";
 import AggiungiUtente from "./pages/AggiungiUtente";
 import ResetPassword from "./pages/ResetPassword";
+import Posizioni from "./pages/Posizioni";
 
 import styles from "./App.module.css";
 import { getUtenteCorrente } from "./api/api";
@@ -53,7 +54,7 @@ function App() {
     return (
         <BrowserRouter>
             <div className={styles.appContainer}>
-                <Sidebar />
+                <Sidebar utente={utente} />
                 <div className={styles.rightColumn}>
                     <Topbar
                         searchQuery={searchQuery}
@@ -68,7 +69,7 @@ function App() {
                             <Route path="/componenti/:id" element={<DettaglioComponente utente={utente} />} />
                             <Route path="/componenti/:id/modifica" element={<ModificaComponente />} />
                             <Route path="/categorie" element={<Categorie />} />
-                            <Route path="/posizioni" element={<h1>Pagina Posizioni</h1>} />
+                            <Route path="/posizioni" element={<Posizioni utente={utente} />} />
                             <Route path="/esperienze" element={<h1>Pagina Esperienze</h1>} />
                             <Route path="/statistiche" element={<h1>Pagina Statistiche</h1>} />
                             <Route path="/utenti" element={<Utenti utente={utente} />} />

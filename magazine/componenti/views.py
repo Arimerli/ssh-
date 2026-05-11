@@ -371,4 +371,42 @@ def richiedi_reset_password(request):
             )
     return Response({'success': True})
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def crea_posizione_completa(request):
+    tipo = request.data.get('tipo')
+    nome = request.data.get('nome')
+    parent_id = request.data.get('parent_id')
+
+    if tipo == 'cassetto':
+        parent = Locations.objects.get(id=parent_id) if parent_id else None
+        cassetto = Locations.objects.create(nome=nome, parent=parent)
+        salva_log(request.user, 'Aggiunta', f'Posizione: {nome}')
+        return Response({'success': True, 'id': cassetto.id})
+
+    elif tipo == 'scaffale':
+        parent = Locations.objects.get(id=parent_id) if parent_id else None
+        scaffale = Locations.objects.create(nome=nome, parent=parent)
+        salva_log(request.user, 'Aggiunto', f'Scaffale: {nome}')
+        num_cassetti = int(request.data.get('num_cassetti', 0))
+        for i in range(1, num_cassetti + 1):
+            nome_cassetto = f"Cassetto {str(i).zfill(2)}"
+            Locations.objects.create(nome=nome_cassetto, parent=scaffale)
+        return Response({'success': True, 'id': scaffale.id})
+
+    elif tipo == 'laboratorio':
+        lab = Locations.objects.create(nome=nome, parent=None)
+        salva_log(request.user, 'Aggiunto', f'Laboratorio: {nome}')
+        scaffali_data = request.data.get('scaffali', [])
+        for i, s in enumerate(scaffali_data, 1):
+            nome_scaffale = f"Scaffale {i}"
+            scaffale = Locations.objects.create(nome=nome_scaffale, parent=lab)
+            num_cassetti = int(s.get('num_cassetti', 0))
+            for j in range(1, num_cassetti + 1):
+                nome_cassetto = f"Cassetto {str(j).zfill(2)}"
+                Locations.objects.create(nome=nome_cassetto, parent=scaffale)
+        return Response({'success': True, 'id': lab.id})
+
+    return Response({'errore': 'Tipo non valido'}, status=400)
+
 

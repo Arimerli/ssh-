@@ -15,19 +15,20 @@
 }
 
 .gruppo {
-    border: 1.5px solid var(--border-color);
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
-    background: var(--bg-card);
 }
 
 .riga {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 16px 20px;
+    gap: 16px;
     cursor: pointer;
     transition: background 0.15s;
-    gap: 16px;
 }
 
 .riga:hover {
@@ -69,6 +70,12 @@
     background: var(--bg-active);
     color: var(--text-muted);
     white-space: nowrap;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.badge:hover {
+    color: var(--accent);
 }
 
 .freccia {
@@ -90,4 +97,5 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    background: var(--bg-primary);
 }
