@@ -1,0 +1,41 @@
+.container {
+    padding-top: 2px;
+}
+
+.griglia {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+    border-color: var(--accent);
+}
+
+.nome {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--nome-card);
+    margin-bottom: 6px;
+}
+
+.descrizione {
+    font-size: 11px;
+    color: var(--scritte-card);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

@@ -2,14 +2,12 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents
-from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer, TagSerializer, TagComponentSerializer
 from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.models import User, Group
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents, Log
-from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer, TagSerializer, TagComponentSerializer, LogSerializer
+from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents, Log, Esperienze, EsperienzeComponents, Acquisti
+from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer, TagSerializer, TagComponentSerializer, LogSerializer, EsperienzeSerializer, EsperienzeComponentsSerializer, AcquistiSerializer
 from django.views.decorators.csrf import csrf_exempt
 import random
 import string
@@ -114,6 +112,25 @@ class LogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Log.objects.all()
     serializer_class = LogSerializer
     permission_classes = [IsAuthenticated]
+
+class EsperienzeViewSet(viewsets.ModelViewSet):
+    queryset = Esperienze.objects.all()
+    serializer_class = EsperienzeSerializer
+
+class EsperienzeComponentsViewSet(viewsets.ModelViewSet):
+    queryset = EsperienzeComponents.objects.all()
+    serializer_class = EsperienzeComponentsSerializer
+
+    def get_queryset(self):
+        queryset = EsperienzeComponents.objects.all()
+        esperienza = self.request.query_params.get('esperienza')
+        if esperienza:
+            queryset = queryset.filter(esperienza_id=esperienza)
+        return queryset
+
+class AcquistiViewSet(viewsets.ModelViewSet):
+    queryset = Acquisti.objects.all()
+    serializer_class = AcquistiSerializer
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

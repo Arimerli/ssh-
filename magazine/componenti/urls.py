@@ -11,6 +11,9 @@ router.register(r'giacenze', views.GiacenzaViewSet)
 router.register(r'tags', views.TagViewSet)
 router.register(r'tag-components', views.TagComponentViewSet)
 router.register(r'log', views.LogViewSet)
+router.register(r'esperienze', views.EsperienzeViewSet)
+router.register(r'esperienze-components', views.EsperienzeComponentsViewSet)
+router.register(r'acquisti', views.AcquistiViewSet)
 
 urlpatterns = router.urls + [
     path('utente/', views.utente_corrente),

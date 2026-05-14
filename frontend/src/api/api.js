@@ -50,4 +50,8 @@ export const richiediResetPassword = (email) =>
     api.post('/utente/richiedi-reset/', { email });
 export const creaPosizione = (dati) => api.post('/posizioni/crea/', dati);
 
+export const getEsperienze = () => api.get("/esperienze/");
+export const getEsperienzeComponents = (id) => api.get(`/esperienze-components/?esperienza=${id}`);
+export const getAcquisti = () => api.get("/acquisti/");
+
 export default api;

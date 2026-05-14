@@ -22,7 +22,7 @@ function Sidebar({ utente }) {
                 <div className={styles.navGroup}>
                     <div className={styles.navGroupLabel}>Attività</div>
                         <NavLink to="/esperienze" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}>Esperienze</NavLink>
-                        <NavLink to="/statistiche" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}>Statistiche</NavLink>
+                        <NavLink to="/acquisti" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.navLinkActive}` : styles.navLink}>Lista Acquisti</NavLink>
                 </div>
 
                 <div className={styles.navGroup}>

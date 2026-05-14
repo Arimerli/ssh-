@@ -12,7 +12,12 @@ import Impostazioni from "./pages/Impostazioni";
 import Utenti from "./pages/Utenti";
 import AggiungiUtente from "./pages/AggiungiUtente";
 import ResetPassword from "./pages/ResetPassword";
+import Esperienze from "./pages/Esperienze";
+import DettaglioEsperienza from "./pages/DettaglioEsperienza";
+import AggiungiEsperienza from "./pages/AggiungiEsperienza";
+import ModificaEsperienza from "./pages/ModificaEsperienza";
 import Posizioni from "./pages/Posizioni";
+import Acquisti from "./pages/Acquisti";
 
 import styles from "./App.module.css";
 import { getUtenteCorrente } from "./api/api";
@@ -70,8 +75,11 @@ function App() {
                             <Route path="/componenti/:id/modifica" element={<ModificaComponente />} />
                             <Route path="/categorie" element={<Categorie />} />
                             <Route path="/posizioni" element={<Posizioni utente={utente} />} />
-                            <Route path="/esperienze" element={<h1>Pagina Esperienze</h1>} />
-                            <Route path="/statistiche" element={<h1>Pagina Statistiche</h1>} />
+                            <Route path="/esperienze" element={<Esperienze searchQuery={searchQuery} utente={utente} />} />
+                            <Route path="/esperienze/aggiungi" element={<AggiungiEsperienza />} />
+                            <Route path="/esperienze/:id" element={<DettaglioEsperienza utente={utente} />} />
+                            <Route path="/esperienze/:id/modifica" element={<ModificaEsperienza />} />
+                            <Route path="/acquisti" element={<Acquisti utente={utente} />} />
                             <Route path="/utenti" element={<Utenti utente={utente} />} />
                             <Route path="/utenti/aggiungi" element={<AggiungiUtente />} />
                             <Route path="/impostazioni" element={<Impostazioni utente={utente} />} />
