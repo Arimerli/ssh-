@@ -1,19 +1,19 @@
 .container {
-    padding: 24px;
+    padding: 1.5rem;
 }
 
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 28px;
+    margin-bottom: 1.75rem;
 }
 
 .back {
     background: none;
     border: none;
     color: var(--accent);
-    font-size: 13px;
+    font-size: 0.8125rem;
     cursor: pointer;
     padding: 0;
 }
@@ -23,7 +23,7 @@
 }
 
 .titolo {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 500;
     color: var(--text-primary);
     margin: 0;
@@ -35,52 +35,52 @@
 
 .sezione {
     background: var(--bg-sidebar);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 16px;
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
 }
 
 .sezioneLabel {
-    font-size: 11px;
+    font-size: 0.6875rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--accent);
-    margin-bottom: 14px;
+    margin-bottom: 0.875rem;
     font-weight: 500;
 }
 
 .nome {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 500;
     color: var(--text-primary);
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 }
 
 .descrizione {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--text-muted);
     line-height: 1.6;
 }
 
 .vuoto {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--text-muted);
 }
 
 .listaComponenti {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
 .componenteRiga {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.5rem;
+    border: 0.0625rem solid var(--border-color);
     cursor: pointer;
     transition: 0.15s;
 }
@@ -91,31 +91,31 @@
 }
 
 .componenteNome {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--text-primary);
 }
 
 .componenteArrow {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--accent);
     opacity: 0.6;
 }
 
 .azioni {
     display: flex;
-    gap: 10px;
+    gap: 0.625rem;
     align-items: center;
-    margin-top: 8px;
+    margin-top: 0.5rem;
 }
 
 .btnModifica {
-    height: 38px;
-    padding: 0 20px;
+    height: 2.375rem;
+    padding: 0 1.25rem;
     background: var(--accent);
     color: #fff;
     border: none;
-    border-radius: 8px;
-    font-size: 13px;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
     cursor: pointer;
     transition: opacity 0.15s;
 }
@@ -125,13 +125,13 @@
 }
 
 .btnElimina {
-    height: 38px;
-    padding: 0 20px;
+    height: 2.375rem;
+    padding: 0 1.25rem;
     background: none;
     color: #e05c5c;
-    border: 1px solid #e05c5c44;
-    border-radius: 8px;
-    font-size: 13px;
+    border: 0.0625rem solid #e05c5c44;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
     cursor: pointer;
     transition: 0.15s;
 }
@@ -143,32 +143,32 @@
 .conferma {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem;
 }
 
 .confermaTestp {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--text-muted);
 }
 
 .btnConfermaElimina {
-    height: 38px;
-    padding: 0 16px;
+    height: 2.375rem;
+    padding: 0 1rem;
     background: #e05c5c;
     color: #fff;
     border: none;
-    border-radius: 8px;
-    font-size: 13px;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
     cursor: pointer;
 }
 
 .btnAnnulla {
-    height: 38px;
-    padding: 0 16px;
+    height: 2.375rem;
+    padding: 0 1rem;
     background: none;
     color: var(--text-muted);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 13px;
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
     cursor: pointer;
 }

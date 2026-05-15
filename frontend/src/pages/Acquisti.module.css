@@ -1,26 +1,26 @@
 .container {
-    padding-top: 2px;
+    padding-top: 0.125rem;
 }
 
 .griglia {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1rem;
 }
 
 .card {
     background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    border: 0.0625rem solid var(--border-card);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.4);
 }
 
 .nome {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 500;
     color: var(--nome-card);
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
 }
 
 .info {
@@ -30,19 +30,19 @@
 }
 
 .quantita {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--accent);
     font-weight: 500;
 }
 
 .data {
-    font-size: 11px;
+    font-size: 0.6875rem;
     color: var(--text-muted);
 }
 
 .vuoto {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--text-muted);
     grid-column: 1 / -1;
-    padding: 20px 0;
+    padding: 1.25rem 0;
 }
