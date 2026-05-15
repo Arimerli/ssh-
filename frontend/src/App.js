@@ -73,7 +73,7 @@ function App() {
                             <Route path="/componenti/aggiungi" element={<AggiungiComponente />} />
                             <Route path="/componenti/:id" element={<DettaglioComponente utente={utente} />} />
                             <Route path="/componenti/:id/modifica" element={<ModificaComponente />} />
-                            <Route path="/categorie" element={<Categorie />} />
+                            <Route path="/categorie" element={<Categorie utente={utente} />} />
                             <Route path="/posizioni" element={<Posizioni utente={utente} />} />
                             <Route path="/esperienze" element={<Esperienze searchQuery={searchQuery} utente={utente} />} />
                             <Route path="/esperienze/aggiungi" element={<AggiungiEsperienza />} />

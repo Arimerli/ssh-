@@ -1,11 +1,28 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getLocations, creaPosizione } from "../api/api";
-import { LuHouse, LuContainer, LuArchive } from "react-icons/lu";
+
+import {
+    getLocations,
+    creaPosizione,
+    eliminaPosizione,
+    modificaPosizione
+} from "../api/api";
+
+import {
+    LuHouse,
+    LuContainer,
+    LuArchive,
+    LuTrash2,
+    LuPencil,
+    LuCheck,
+    LuX
+} from "react-icons/lu";
+
 import styles from "./Posizioni.module.css";
 
 function Posizioni({ utente }) {
     const navigate = useNavigate();
+
     const [locations, setLocations] = useState([]);
     const [labAperti, setLabAperti] = useState({});
     const [scaffaleAperti, setScaffaleAperti] = useState({});
@@ -20,7 +37,11 @@ function Posizioni({ utente }) {
 
     const [nomeCassetto, setNomeCassetto] = useState("");
 
-    const puoModificare = utente?.ruolo === 'Amministratore' || utente?.ruolo === 'Tecnico';
+    const [modificaId, setModificaId] = useState(null);
+    const [nuovoNome, setNuovoNome] = useState("");
+
+    const puoModificare =
+        utente?.ruolo === "Amministratore" || utente?.ruolo === "Tecnico";
 
     useEffect(() => {
         caricaLocations();
@@ -45,23 +66,21 @@ function Posizioni({ utente }) {
         setScaffaleAperti(prev => ({ ...prev, [id]: !prev[id] }));
     }
 
-    function aggiornaNumScaffali(n) {
-        const num = parseInt(n) || 1;
-        setNumScaffali(num);
-        setCassetti(Array(num).fill(1));
-    }
-
-    function aggiornaCassetti(index, valore) {
-        setCassetti(prev => prev.map((v, i) => i === index ? parseInt(valore) || 1 : v));
-    }
+    // =========================
+    // CREAZIONE POSIZIONI
+    // =========================
 
     async function handleCreaLab() {
         if (!nomeLab.trim()) return;
+
         await creaPosizione({
-            tipo: 'laboratorio',
+            tipo: "laboratorio",
             nome: nomeLab,
-            scaffali: cassetti.map(n => ({ num_cassetti: n })),
+            scaffali: cassetti.map(n => ({
+                num_cassetti: n
+            }))
         });
+
         setNomeLab("");
         setNumScaffali(1);
         setCassetti([1]);
@@ -71,12 +90,14 @@ function Posizioni({ utente }) {
 
     async function handleCreaScaffale(labId) {
         if (!nomeScaffale.trim()) return;
+
         await creaPosizione({
-            tipo: 'scaffale',
+            tipo: "scaffale",
             nome: nomeScaffale,
             parent_id: labId,
-            num_cassetti: numCassetti,
+            num_cassetti: numCassetti
         });
+
         setNomeScaffale("");
         setNumCassetti(1);
         setFormAttivo(null);
@@ -85,46 +106,159 @@ function Posizioni({ utente }) {
 
     async function handleCreaCassetto(scaffaleId) {
         if (!nomeCassetto.trim()) return;
+
         await creaPosizione({
-            tipo: 'cassetto',
+            tipo: "cassetto",
             nome: nomeCassetto,
-            parent_id: scaffaleId,
+            parent_id: scaffaleId
         });
+
         setNomeCassetto("");
         setFormAttivo(null);
         caricaLocations();
     }
 
+    // =========================
+    // MODIFICA / ELIMINA
+    // =========================
+
+    async function handleEliminaPosizione(e, id, nome) {
+        e.stopPropagation();
+
+        if (!window.confirm(`Eliminare "${nome}"?`)) return;
+
+        await eliminaPosizione(id);
+        caricaLocations();
+    }
+
+    async function handleModificaPosizione(e, id) {
+        e.stopPropagation();
+
+        if (!nuovoNome.trim()) return;
+
+        await modificaPosizione(id, nuovoNome);
+
+        setModificaId(null);
+        setNuovoNome("");
+
+        caricaLocations();
+    }
+
+    function avviaModifica(e, id, nome) {
+        e.stopPropagation();
+        setModificaId(id);
+        setNuovoNome(nome);
+    }
+
+    function annullaModifica(e) {
+        e.stopPropagation();
+        setModificaId(null);
+        setNuovoNome("");
+    }
+
+    // =========================
+    // RENDER
+    // =========================
+
     return (
         <div className={styles.container}>
             <div className={styles.lista}>
+
+                {/* ================= LABORATORI ================= */}
                 {laboratori.map(lab => {
                     const scaffali = getFigli(lab.id);
                     const aperto = labAperti[lab.id];
+                    const inModifica = modificaId === lab.id;
 
                     return (
                         <div key={lab.id} className={styles.labCard}>
                             <div className={styles.labHeader}>
+
                                 <div
                                     className={styles.labInfo}
-                                    onClick={() => toggleLab(lab.id)}
+                                    onClick={() =>
+                                        !inModifica && toggleLab(lab.id)
+                                    }
                                 >
                                     <div className={styles.labIcona}>
                                         <LuHouse size={16} />
                                     </div>
+
                                     <div>
-                                        <div className={styles.labSotto}>LABORATORIO</div>
-                                        <div className={styles.labNome}>{lab.nome}</div>
+                                        <div className={styles.labSotto}>
+                                            LABORATORIO
+                                        </div>
+
+                                        {inModifica ? (
+                                            <input
+                                                className={styles.inputModifica}
+                                                value={nuovoNome}
+                                                onChange={e =>
+                                                    setNuovoNome(e.target.value)
+                                                }
+                                                autoFocus
+                                            />
+                                        ) : (
+                                            <div className={styles.labNome}>
+                                                {lab.nome}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
+
                                 <div className={styles.labRight}>
-                                    <span
-                                        className={styles.btnFiltro}
-                                        onClick={() => navigate(`/componenti?posizione=${lab.id}`)}
-                                        title="Vedi componenti"
-                                    >
-                                        Vedi componenti →
-                                    </span>
+
+                                    {puoModificare && inModifica ? (
+                                        <>
+                                            <span
+                                                className={styles.btnConferma}
+                                                onClick={e =>
+                                                    handleModificaPosizione(
+                                                        e,
+                                                        lab.id
+                                                    )
+                                                }
+                                            >
+                                                <LuCheck size={14} />
+                                            </span>
+
+                                            <span
+                                                className={styles.btnAnnullaModifica}
+                                                onClick={annullaModifica}
+                                            >
+                                                <LuX size={14} />
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span
+                                                className={styles.btnModifica}
+                                                onClick={e =>
+                                                    avviaModifica(
+                                                        e,
+                                                        lab.id,
+                                                        lab.nome
+                                                    )
+                                                }
+                                            >
+                                                <LuPencil size={14} />
+                                            </span>
+
+                                            <span
+                                                className={styles.btnElimina}
+                                                onClick={e =>
+                                                    handleEliminaPosizione(
+                                                        e,
+                                                        lab.id,
+                                                        lab.nome
+                                                    )
+                                                }
+                                            >
+                                                <LuTrash2 size={14} />
+                                            </span>
+                                        </>
+                                    )}
+
                                     <span
                                         className={styles.freccia}
                                         onClick={() => toggleLab(lab.id)}
@@ -134,57 +268,65 @@ function Posizioni({ utente }) {
                                 </div>
                             </div>
 
+                            {/* ================= SCAFFALI ================= */}
                             {aperto && (
                                 <div className={styles.labContenuto}>
+
                                     {scaffali.map(scaffale => {
                                         const cassetti_list = getFigli(scaffale.id);
                                         const scaffAperto = scaffaleAperti[scaffale.id];
 
                                         return (
-                                            <div key={scaffale.id} className={styles.scaffaleCard}>
+                                            <div
+                                                key={scaffale.id}
+                                                className={styles.scaffaleCard}
+                                            >
                                                 <div className={styles.scaffaleHeader}>
+
                                                     <div
                                                         className={styles.scaffaleInfo}
-                                                        onClick={() => toggleScaffale(scaffale.id)}
+                                                        onClick={() =>
+                                                            toggleScaffale(scaffale.id)
+                                                        }
                                                     >
                                                         <div className={styles.scaffaleIcona}>
                                                             <LuContainer size={14} />
                                                         </div>
+
                                                         <div>
-                                                            <div className={styles.scaffaleSotto}>SCAFFALE</div>
-                                                            <div className={styles.scaffaleNome}>{scaffale.nome}</div>
+                                                            <div className={styles.scaffaleSotto}>
+                                                                SCAFFALE
+                                                            </div>
+
+                                                            <div className={styles.scaffaleNome}>
+                                                                {scaffale.nome}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div className={styles.scaffaleRight}>
-                                                        <span
-                                                            className={styles.btnFiltro}
-                                                            onClick={() => navigate(`/componenti?posizione=${scaffale.id}`)}
-                                                            title="Vedi componenti"
-                                                        >
-                                                            Vedi componenti →
-                                                        </span>
-                                                        <span
-                                                            className={styles.freccia}
-                                                            onClick={() => toggleScaffale(scaffale.id)}
-                                                        >
-                                                            {scaffAperto ? "▾" : "▸"}
-                                                        </span>
-                                                    </div>
+
+                                                    <span
+                                                        className={styles.freccia}
+                                                    >
+                                                        {scaffAperto ? "▾" : "▸"}
+                                                    </span>
                                                 </div>
 
+                                                {/* ================= CASSETTI ================= */}
                                                 {scaffAperto && (
                                                     <div className={styles.scaffaleContenuto}>
-                                                        {cassetti_list.map(cassetto => (
+
+                                                        {cassetti_list.map(c => (
                                                             <div
-                                                                key={cassetto.id}
+                                                                key={c.id}
                                                                 className={styles.cassettoRiga}
-                                                                onClick={() => navigate(`/componenti?posizione=${cassetto.id}`)}
+                                                                onClick={() =>
+                                                                    navigate(
+                                                                        `/componenti?posizione=${c.id}`
+                                                                    )
+                                                                }
                                                             >
-                                                                <div className={styles.cassettoIcona}>
-                                                                    <LuArchive size={13} />
-                                                                </div>
-                                                                <span className={styles.cassettoNome}>{cassetto.nome}</span>
-                                                                <span className={styles.cassettoArrow}>→</span>
+                                                                <LuArchive size={13} />
+                                                                <span>{c.nome}</span>
                                                             </div>
                                                         ))}
 
@@ -193,17 +335,22 @@ function Posizioni({ utente }) {
                                                                 <input
                                                                     className={styles.input}
                                                                     value={nomeCassetto}
-                                                                    onChange={e => setNomeCassetto(e.target.value)}
-                                                                    placeholder="Nome cassetto"
-                                                                    autoFocus
+                                                                    onChange={e =>
+                                                                        setNomeCassetto(e.target.value)
+                                                                    }
                                                                 />
-                                                                <button className={styles.btnCrea} onClick={() => handleCreaCassetto(scaffale.id)}>Crea</button>
-                                                                <button className={styles.btnAnnulla} onClick={() => setFormAttivo(null)}>Annulla</button>
+                                                                <button onClick={() => handleCreaCassetto(scaffale.id)}>
+                                                                    Crea
+                                                                </button>
                                                             </div>
                                                         ) : puoModificare && (
-                                                            <div className={styles.aggiungiRiga} onClick={() => setFormAttivo(`cassetto-${scaffale.id}`)}>
-                                                                <span>+</span>
-                                                                <span>Aggiungi cassetto</span>
+                                                            <div
+                                                                className={styles.aggiungiRiga}
+                                                                onClick={() =>
+                                                                    setFormAttivo(`cassetto-${scaffale.id}`)
+                                                                }
+                                                            >
+                                                                + Aggiungi cassetto
                                                             </div>
                                                         )}
                                                     </div>
@@ -212,37 +359,28 @@ function Posizioni({ utente }) {
                                         );
                                     })}
 
+                                    {/* ================= AGGIUNGI SCAFFALE ================= */}
                                     {puoModificare && formAttivo === `scaffale-${lab.id}` ? (
-                                        <div className={styles.formScaffale}>
-                                            <div className={styles.formRiga}>
-                                                <label className={styles.label}>Nome scaffale</label>
-                                                <input
-                                                    className={styles.input}
-                                                    value={nomeScaffale}
-                                                    onChange={e => setNomeScaffale(e.target.value)}
-                                                    placeholder="es. Scaffale 3"
-                                                    autoFocus
-                                                />
-                                            </div>
-                                            <div className={styles.formRiga}>
-                                                <label className={styles.label}>Quanti cassetti</label>
-                                                <input
-                                                    className={styles.inputNumero}
-                                                    type="number"
-                                                    min="1"
-                                                    value={numCassetti}
-                                                    onChange={e => setNumCassetti(parseInt(e.target.value) || 1)}
-                                                />
-                                            </div>
-                                            <div className={styles.formBtns}>
-                                                <button className={styles.btnCrea} onClick={() => handleCreaScaffale(lab.id)}>Crea</button>
-                                                <button className={styles.btnAnnulla} onClick={() => setFormAttivo(null)}>Annulla</button>
-                                            </div>
+                                        <div className={styles.formInline}>
+                                            <input
+                                                value={nomeScaffale}
+                                                onChange={e =>
+                                                    setNomeScaffale(e.target.value)
+                                                }
+                                                placeholder="Nome scaffale"
+                                            />
+                                            <button onClick={() => handleCreaScaffale(lab.id)}>
+                                                Crea
+                                            </button>
                                         </div>
                                     ) : puoModificare && (
-                                        <div className={styles.aggiungiRiga} onClick={() => setFormAttivo(`scaffale-${lab.id}`)}>
-                                            <span>+</span>
-                                            <span>Aggiungi scaffale</span>
+                                        <div
+                                            className={styles.aggiungiRiga}
+                                            onClick={() =>
+                                                setFormAttivo(`scaffale-${lab.id}`)
+                                            }
+                                        >
+                                            + Aggiungi scaffale
                                         </div>
                                     )}
                                 </div>
@@ -251,50 +389,25 @@ function Posizioni({ utente }) {
                     );
                 })}
 
-                {puoModificare && formAttivo === 'laboratorio' ? (
+                {/* ================= AGGIUNGI LAB ================= */}
+                {puoModificare && formAttivo === "laboratorio" ? (
                     <div className={styles.formLab}>
-                        <div className={styles.formTitolo}>Nuovo laboratorio</div>
-                        <div className={styles.formRiga}>
-                            <label className={styles.label}>Nome laboratorio</label>
-                            <input
-                                className={styles.input}
-                                value={nomeLab}
-                                onChange={e => setNomeLab(e.target.value)}
-                                placeholder="es. Lab C"
-                                autoFocus
-                            />
-                        </div>
-                        <div className={styles.formRiga}>
-                            <label className={styles.label}>Quanti scaffali</label>
-                            <input
-                                className={styles.inputNumero}
-                                type="number"
-                                min="1"
-                                value={numScaffali}
-                                onChange={e => aggiornaNumScaffali(e.target.value)}
-                            />
-                        </div>
-                        {cassetti.map((n, i) => (
-                            <div key={i} className={styles.formRiga}>
-                                <label className={styles.label}>Scaffale {i + 1} — quanti cassetti</label>
-                                <input
-                                    className={styles.inputNumero}
-                                    type="number"
-                                    min="1"
-                                    value={n}
-                                    onChange={e => aggiornaCassetti(i, e.target.value)}
-                                />
-                            </div>
-                        ))}
-                        <div className={styles.formBtns}>
-                            <button className={styles.btnCrea} onClick={handleCreaLab}>Crea</button>
-                            <button className={styles.btnAnnulla} onClick={() => setFormAttivo(null)}>Annulla</button>
-                        </div>
+                        <input
+                            value={nomeLab}
+                            onChange={e => setNomeLab(e.target.value)}
+                            placeholder="Nome laboratorio"
+                        />
+
+                        <button onClick={handleCreaLab}>
+                            Crea laboratorio
+                        </button>
                     </div>
                 ) : puoModificare && (
-                    <div className={styles.aggiungiLab} onClick={() => setFormAttivo('laboratorio')}>
-                        <span>+</span>
-                        <span>Aggiungi laboratorio</span>
+                    <div
+                        className={styles.aggiungiLab}
+                        onClick={() => setFormAttivo("laboratorio")}
+                    >
+                        + Aggiungi laboratorio
                     </div>
                 )}
             </div>

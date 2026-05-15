@@ -54,4 +54,16 @@ export const getEsperienze = () => api.get("/esperienze/");
 export const getEsperienzeComponents = (id) => api.get(`/esperienze-components/?esperienza=${id}`);
 export const getAcquisti = () => api.get("/acquisti/");
 
+export const eliminaCategoria = (id) =>
+    api.delete(`/categories/${id}/elimina/`);
+
+export const modificaCategoria = (id, nome) =>
+    api.patch(`/categories/${id}/modifica/`, { nome });
+
+export const eliminaPosizione = (id) =>
+    api.delete(`/locations/${id}/elimina/`);
+
+export const modificaPosizione = (id, nome) =>
+    api.patch(`/locations/${id}/modifica/`, { nome });
+
 export default api;

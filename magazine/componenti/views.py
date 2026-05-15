@@ -426,4 +426,102 @@ def crea_posizione_completa(request):
 
     return Response({'errore': 'Tipo non valido'}, status=400)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def elimina_categoria(request, categoria_id):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name not in ['Amministratore', 'Tecnico']:
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        categoria = Categories.objects.get(id=categoria_id)
+    except Categories.DoesNotExist:
+        return Response({'errore': 'Categoria non trovata'}, status=404)
+
+    nome = categoria.nome
+
+    def get_tutti_ids(cat_id):
+        ids = [cat_id]
+        figli = Categories.objects.filter(parent_id=cat_id)
+        for figlio in figli:
+            ids.extend(get_tutti_ids(figlio.id))
+        return ids
+
+    tutti_ids = get_tutti_ids(categoria_id)
+
+    from django.db import connection
+    with connection.cursor() as cursor:
+        placeholders = ','.join(['%s'] * len(tutti_ids))
+        cursor.execute(
+            f"UPDATE components SET categoria = NULL WHERE categoria IN ({placeholders})",
+            tutti_ids
+        )
+
+    Categories.objects.filter(id__in=tutti_ids).delete()
+
+    salva_log(request.user, 'Eliminata', f'Categoria: {nome}')
+    return Response({'success': True})
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def modifica_categoria(request, categoria_id):
+    try:
+        categoria = Categories.objects.get(id=categoria_id)
+    except Categories.DoesNotExist:
+        return Response({'errore': 'Categoria non trovata'}, status=404)
+
+    nome = request.data.get('nome')
+    if nome:
+        categoria.nome = nome
+        categoria.save()
+        salva_log(request.user, 'Modificata', f'Categoria: {nome}')
+
+    return Response({'success': True})
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def elimina_posizione(request, posizione_id):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name not in ['Amministratore', 'Tecnico']:
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        posizione = Locations.objects.get(id=posizione_id)
+    except Locations.DoesNotExist:
+        return Response({'errore': 'Posizione non trovata'}, status=404)
+
+    # elimina ricorsivamente tutti i figli
+    def elimina_ricorsivo(loc_id):
+        figli = Locations.objects.filter(parent=loc_id)
+        for f in figli:
+            elimina_ricorsivo(f.id)
+        Locations.objects.filter(id=loc_id).delete()
+
+    nome = posizione.nome
+    elimina_ricorsivo(posizione_id)
+    salva_log(request.user, 'Eliminata', f'Posizione: {nome}')
+    return Response({'success': True})
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def modifica_posizione(request, posizione_id):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name not in ['Amministratore', 'Tecnico']:
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        posizione = Locations.objects.get(id=posizione_id)
+    except Locations.DoesNotExist:
+        return Response({'errore': 'Posizione non trovata'}, status=404)
+
+    nome = request.data.get('nome')
+    if nome:
+        posizione.nome = nome
+        posizione.save()
+        salva_log(request.user, 'Modificata', f'Posizione: {nome}')
+
+    return Response({'success': True})
+
 
