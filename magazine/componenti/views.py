@@ -186,7 +186,7 @@ def reset_password(request, user_id):
     if utente.email:
         send_mail(
             subject='Reset password — AjaksInventory',
-            message=f'Salve {utente.first_name},\n\nLa tua password è stata resettata dall\'amministratore.\n\nPassword temporanea: {password_temp}\n\nAccedi e cambiala subito dalla pagina Impostazioni.\n\nAjaksInventory — ITI E. Fermi Modena',
+            message=f'Salve {utente.first_name},\n\nLa tua password è stata resettata dall\'amministratore.\n\nPassword temporanea: {password_temp}\n\nAccedi e cambiala subito dalla pagina Impostazioni.\n\nAjaksInventory — ITIS E. Fermi Modena',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[utente.email],
         )
@@ -251,7 +251,7 @@ def crea_utente(request):
     if email:
         send_mail(
             subject='Benvenuto su AjaksInventory',
-            message=f'Salve {nome} {cognome},\n\nIl tuo account è stato creato.\n\nPassword temporanea: {password_temp}\n\nAccedi con la tua email istituzionale e cambia la password dalla pagina Impostazioni.\n\nAjaksInventory — ITI E. Fermi Modena',
+            message=f'Salve {nome} {cognome},\n\nIl tuo account è stato creato.\n\nPassword temporanea: {password_temp}\n\nAccedi con la tua email istituzionale e cambia la password dalla pagina Impostazioni.\n\nAjaksInventory — ITIS E. Fermi Modena',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
         )

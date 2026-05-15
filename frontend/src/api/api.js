@@ -12,6 +12,19 @@ api.interceptors.request.use(config => {
     return config;
 });
 
+api.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem("token");
+            window.location.replace("/login");
+            return;
+        }
+        return Promise.reject(error);
+    }
+);
+
+
 export const getComponenti = () => api.get("/components/");
 export const getComponente = (id) => api.get(`/components/${id}/`);
 export const getCategorie = () => api.get("/categories/");
