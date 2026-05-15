@@ -491,11 +491,11 @@ def elimina_posizione(request, posizione_id):
     except Locations.DoesNotExist:
         return Response({'errore': 'Posizione non trovata'}, status=404)
 
-    # elimina ricorsivamente tutti i figli
     def elimina_ricorsivo(loc_id):
         figli = Locations.objects.filter(parent=loc_id)
         for f in figli:
             elimina_ricorsivo(f.id)
+        Giacenze.objects.filter(cassetto=loc_id).delete()
         Locations.objects.filter(id=loc_id).delete()
 
     nome = posizione.nome

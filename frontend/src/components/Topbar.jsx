@@ -50,7 +50,7 @@ function Topbar({ searchQuery, setSearchQuery, utente, setUtente}) {
                          setSearchQuery = aggiorna searchQuery con il nuovo testo*/}
                 <input
                     type="text"
-                    placeholder="Cerca componenti, categorie, utenti..."
+                    placeholder="Cerca componenti..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className={styles.searchInput}
