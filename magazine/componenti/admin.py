@@ -4,7 +4,7 @@ from django.contrib import admin
 # importa tutti i tuoi modelli
 from .models import (
     Categories, Components, Tags, TagComponents,
-    Locations, Giacenze, Esperienze, EsperienzeComponents
+    Locations, Giacenze, Esperienze, EsperienzeComponents, Acquisti
 )
 
 # registra ogni modello nell'admin
@@ -17,3 +17,4 @@ admin.site.register(Locations)
 admin.site.register(Giacenze)
 admin.site.register(Esperienze)
 admin.site.register(EsperienzeComponents)
+admin.site.register(Acquisti)

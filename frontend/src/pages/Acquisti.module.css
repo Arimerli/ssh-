@@ -1,0 +1,48 @@
+.container {
+  padding-top: 2px;
+}
+
+.griglia {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.nome {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--nome-card);
+  margin-bottom: 10px;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quantita {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.data {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.vuoto {
+  font-size: 13px;
+  color: var(--text-muted);
+  grid-column: 1 / -1;
+  padding: 20px 0;
+}

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents, Log
+from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents, Log, Esperienze, EsperienzeComponents, Acquisti
 
 class ComponentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,3 +69,18 @@ class LogSerializer(serializers.ModelSerializer):
 
     def get_utente_nome(self, obj):
         return f"{obj.utente.first_name} {obj.utente.last_name}".strip() or obj.utente.username
+
+class EsperienzeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Esperienze
+        fields = '__all__'
+
+class EsperienzeComponentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EsperienzeComponents
+        fields = '__all__'
+
+class AcquistiSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Acquisti
+        fields = '__all__'

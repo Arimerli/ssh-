@@ -1,29 +1,60 @@
+/* ─── App Shell ────────────────────────────────────────────────────────────── */
+
 .appContainer {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  position: relative;
 }
 
+/* Overlay that appears behind the sidebar on mobile when it's open */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 20;
+}
+
+.overlay.visible {
+  display: block;
+}
+
+/* Right column: topbar + main content */
 .rightColumn {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-    height: 100vh;
-    overflow: hidden;
-    border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0; /* prevents flex children from overflowing */
+  height: 100vh;
+  overflow: hidden;
+  border-left: 1px solid var(--border-color);
 }
 
+/* Scrollable page area */
 .mainContent {
-    flex: 1;
-    overflow-y: auto;
-    min-height: 0;
-    scrollbar-width: none;
-    padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: none;
+  padding: 1.25rem;
 }
 
 .mainContent::-webkit-scrollbar {
-    display: none;
+  display: none;
+}
+
+/* ─── Responsive ────────────────────────────────────────────────────────────── */
+
+/* On mobile: sidebar is hidden by default and slides in as an overlay */
+@media (max-width: 768px) {
+  .rightColumn {
+    border-left: none;
+  }
+
+  .mainContent {
+    padding: 1rem;
+  }
 }

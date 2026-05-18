@@ -1,142 +1,184 @@
-/* barra superiore: occupa tutta la larghezza, allinea il contenuto */
+/* ─── Topbar ────────────────────────────────────────────────────────────────── */
+
 .topbar {
-  height: 93px;
+  /* min-height instead of height so it can grow if content wraps */
+  min-height: 60px;
   background-color: var(--bg-sidebar);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  flex-shrink: 0;
 }
 
-/* contenitore della searchbox con icona e input affiancati */
+/* ─── Hamburger (mobile only) ───────────────────────────────────────────────── */
+
+.menuBtn {
+  display: none; /* hidden on desktop */
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+/* ─── Search box ────────────────────────────────────────────────────────────── */
+
 .searchBox {
   display: flex;
   align-items: center;
   background-color: var(--bg-input);
-  border-radius: 5px;
-  border: 1.50px solid var(--accent);
-  padding: 8px 16px;
-  width: 500px;
-  gap: 12px;
+  border-radius: 6px;
+  border: 1.5px solid var(--accent);
+  padding: 0.45rem 0.875rem;
+  /* flex-based width: grows to fill space, bounded between min and max */
+  flex: 1;
+  min-width: 0; /* allows shrinking below content width */
+  max-width: 500px;
+  gap: 0.6rem;
 }
 
-/* campo di testo: niente bordi, sfondo trasparente */
 .searchInput {
   background: transparent;
   border: none;
   outline: none;
   color: var(--accent);
-  font-size: 14px;
+  font-size: 0.875rem;
   width: 100%;
+  min-width: 0;
 }
 
-/* testo del placeholder più tenue */
 .searchInput::placeholder {
   color: var(--text-muted);
 }
 
-/* pulsante X: niente sfondo, cursore pointer */
+.searchIcon {
+  color: #378add;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
 .clearButton {
   background: none;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 0.75rem;
   padding: 0;
-}
-
-.clearButton:hover {
-  color: #fff;
-}
-
-.searchIcon {
-  color: #378ADD;
-  font-size: 16px;
-}
-
-.actions {
-  margin-left: auto; /* Spinge il pulsante tutto a destra */
-  display: flex;
-  align-items: center;
-}
-
-
-.userArea {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.userInfo {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-}
-
-.userAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--avatar-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  color: var(--avatar-text);
-  font-weight: 500;
   flex-shrink: 0;
 }
 
-.userName {
-  font-size: 15px;
-  color: var(--text-main);
-  font-weight: 500;
-  text-align: left;
+.clearButton:hover {
+  color: var(--text-primary);
 }
 
-.userRole {
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: left;
-}
+/* ─── Right section ─────────────────────────────────────────────────────────── */
 
 .rightSection {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 30px;
-  padding-right: 20px;
+  gap: 1rem;
+  flex-shrink: 0;
 }
 
-.professori {
-    background: #2f6feb20; /* trasparente */
-    color: #2f6feb;
-    border: 1px solid #2f6feb40;
+.userArea {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
 }
 
-.amministratore {
-    background: #3da9fc20;
-    color: #3da9fc;
-    border: 1px solid #3da9fc40;
+.userAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--avatar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: var(--avatar-text);
+  font-weight: 500;
+  flex-shrink: 0;
 }
 
-.tecnici {
-    background: #2cb67d20;
-    color: #2cb67d;
-    border: 1px solid #2cb67d40;
+.userInfo {
+  line-height: 1.2;
+}
+
+.userName {
+  font-size: 0.875rem;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.userRole {
+  font-size: 0.72rem;
+  color: var(--text-muted);
 }
 
 .logoutLink {
-    all: unset;
-    display: block;
-    margin-top: 2px;
-    font-size: 11px !important;
-    color: #8c8c8c;
-    cursor: pointer;
-    transition: 0.2s;
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 2px;
+  font-size: 0.68rem;
+  color: #8c8c8c;
+  cursor: pointer;
+  transition: color 0.2s;
 }
 
 .logoutLink:hover {
-    color: #ff4d4f;
-    text-decoration: underline;
+  color: #ff4d4f;
+  text-decoration: underline;
+}
+
+/* ─── Role avatar colors ────────────────────────────────────────────────────── */
+
+.professori {
+  background: #2f6feb20;
+  color: #2f6feb;
+  border: 1px solid #2f6feb40;
+}
+
+.amministratore {
+  background: #3da9fc20;
+  color: #3da9fc;
+  border: 1px solid #3da9fc40;
+}
+
+.tecnici {
+  background: #2cb67d20;
+  color: #2cb67d;
+  border: 1px solid #2cb67d40;
+}
+
+/* ─── Mobile ────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .menuBtn {
+    display: flex;
+    align-items: center;
+  }
+
+  /* On very small screens, hide name/role text to save space */
+  .userInfo {
+    display: none;
+  }
+
+  .rightSection {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* On tiny phones, hide the full search placeholder text */
+  .searchInput::placeholder {
+    opacity: 0;
+  }
 }

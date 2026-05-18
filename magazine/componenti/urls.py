@@ -11,6 +11,9 @@ router.register(r'giacenze', views.GiacenzaViewSet)
 router.register(r'tags', views.TagViewSet)
 router.register(r'tag-components', views.TagComponentViewSet)
 router.register(r'log', views.LogViewSet)
+router.register(r'esperienze', views.EsperienzeViewSet)
+router.register(r'esperienze-components', views.EsperienzeComponentsViewSet)
+router.register(r'acquisti', views.AcquistiViewSet)
 
 urlpatterns = router.urls + [
     path('utente/', views.utente_corrente),
@@ -25,4 +28,10 @@ urlpatterns = router.urls + [
     path('utente/aggiorna-profilo/', views.aggiorna_profilo),
     path('utenti/<int:pk>/aggiorna/', views.aggiorna_utente),
     path('utenti/<int:pk>/elimina/', views.elimina_utente),
+    path('utente/richiedi-reset/', views.richiedi_reset_password),
+    path('posizioni/crea/', views.crea_posizione_completa),
+    path('categories/<int:categoria_id>/elimina/', views.elimina_categoria),
+    path('categories/<int:categoria_id>/modifica/', views.modifica_categoria),
+    path('locations/<int:posizione_id>/elimina/', views.elimina_posizione),
+    path('locations/<int:posizione_id>/modifica/', views.modifica_posizione),
 ]

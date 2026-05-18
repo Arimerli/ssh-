@@ -2,14 +2,13 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents
-from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer, TagSerializer, TagComponentSerializer
 from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.models import User, Group
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents, Log
-from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer, TagSerializer, TagComponentSerializer, LogSerializer
+from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents, Log, Esperienze, EsperienzeComponents, Acquisti
+from .serializers import ComponentSerializer, CategorySerializer, LocationSerializer, GiacenzaSerializer, TagSerializer, TagComponentSerializer, LogSerializer, EsperienzeSerializer, EsperienzeComponentsSerializer, AcquistiSerializer
+from django.views.decorators.csrf import csrf_exempt
 import random
 import string
 
@@ -114,6 +113,59 @@ class LogViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = LogSerializer
     permission_classes = [IsAuthenticated]
 
+class EsperienzeViewSet(viewsets.ModelViewSet):
+    queryset = Esperienze.objects.all()
+    serializer_class = EsperienzeSerializer
+
+class EsperienzeComponentsViewSet(viewsets.ModelViewSet):
+    queryset = EsperienzeComponents.objects.all()
+    serializer_class = EsperienzeComponentsSerializer
+
+    def get_queryset(self):
+        queryset = EsperienzeComponents.objects.all()
+        esperienza = self.request.query_params.get('esperienza')
+        if esperienza:
+            queryset = queryset.filter(esperienza_id=esperienza)
+        return queryset
+    
+    def perform_create(self, serializer):
+        instance = serializer.save()
+
+        componente_nome = getattr(instance.component, "nome", None) or str(instance.component_id)
+        esperienza_nome = getattr(instance.esperienza, "nome", None) or str(instance.esperienza_id)
+
+        salva_log(
+            self.request.user,
+            "Aggiunta",
+            f"Componente: {componente_nome} aggiunto all'esperienza {esperienza_nome}"
+        )
+
+class AcquistiViewSet(viewsets.ModelViewSet):
+    queryset = Acquisti.objects.all()
+    serializer_class = AcquistiSerializer
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+
+
+        nome = (
+            getattr(instance, "nome", None)
+            or getattr(instance, "titolo", None)
+            or getattr(instance, "descrizione", None)
+        )
+
+        if not nome and hasattr(instance, "componente"):
+            nome = getattr(instance.componente, "nome", None) or str(instance.componente_id)
+
+        if not nome:
+            nome = f"Acquisto ID {instance.id}"
+
+        salva_log(
+            self.request.user,
+            "Aggiunta",
+            f"Acquisto effettuato: {nome}"
+        )
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def utente_corrente(request):
@@ -168,7 +220,7 @@ def reset_password(request, user_id):
     if utente.email:
         send_mail(
             subject='Reset password — AjaksInventory',
-            message=f'Salve {utente.first_name},\n\nLa tua password è stata resettata dall\'amministratore.\n\nPassword temporanea: {password_temp}\n\nAccedi e cambiala subito dalla pagina Impostazioni.\n\nAjaksInventory — ITI E. Fermi Modena',
+            message=f'Salve {utente.first_name},\n\nLa tua password è stata resettata dall\'amministratore.\n\nPassword temporanea: {password_temp}\n\nAccedi e cambiala subito dalla pagina Impostazioni.\n\nAjaksInventory — ITIS E. Fermi Modena',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[utente.email],
         )
@@ -210,7 +262,6 @@ def crea_utente(request):
         nome = ''
         cognome = ''
 
-    # usa l'email come username
     username = email
 
     if User.objects.filter(username=username).exists():
@@ -234,7 +285,7 @@ def crea_utente(request):
     if email:
         send_mail(
             subject='Benvenuto su AjaksInventory',
-            message=f'Salve {nome} {cognome},\n\nIl tuo account è stato creato.\n\nPassword temporanea: {password_temp}\n\nAccedi con la tua email istituzionale e cambia la password dalla pagina Impostazioni.\n\nAjaksInventory — ITI E. Fermi Modena',
+            message=f'Salve {nome} {cognome},\n\nIl tuo account è stato creato.\n\nPassword temporanea: {password_temp}\n\nAccedi con la tua email istituzionale e cambia la password dalla pagina Impostazioni.\n\nAjaksInventory — ITIS E. Fermi Modena',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
         )
@@ -336,4 +387,175 @@ def elimina_utente(request, pk):
         return Response({'success': True})
     except User.DoesNotExist:
         return Response({'errore': 'Utente non trovato'}, status=404)
+
+@csrf_exempt
+@api_view(['POST'])
+def richiedi_reset_password(request):
+    email = request.data.get('email')
+
+    try:
+        utente = User.objects.get(username=email)
+    except User.DoesNotExist:
+        return Response({'success': True})
+
+    gruppo = utente.groups.first()
+    amministratore = gruppo and gruppo.name == 'Amministratore'
+
+    if amministratore:
+        password_temp = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+        utente.set_password(password_temp)
+        utente.save()
+        send_mail(
+            subject='Reset password - AjaksInventory',
+            message=f"Salve{utente.first_name},\nquella che segue è il reset della password da lei richiesto: \n{password_temp}\n si raccomanda di cambiarla immediatamente dalla pagina impostazioni una volta entrato, \n AjaksInventory - ITIS E. Fermi Modena",
+            from_email = settings.DEFAULT_FROM_EMAIL,
+            recipient_list = [email],
+        )
+    else:
+        admin = User.objects.filter(groups__name='Amministratore').first()
+        if admin and admin.email:
+            send_mail(
+                subject='Richiesta reset password - AjaksInventory',
+                message=f'Salve, \nutente {utente.first_name} {utente.last_name} ({email}) ha richiesto il reset della password. \nAjaksInventory - ITIS E. Fermi Modena',
+                from_email = settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[admin.email],
+            )
+    return Response({'success': True})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def crea_posizione_completa(request):
+    tipo = request.data.get('tipo')
+    nome = request.data.get('nome')
+    parent_id = request.data.get('parent_id')
+
+    if tipo == 'cassetto':
+        parent = Locations.objects.get(id=parent_id) if parent_id else None
+        cassetto = Locations.objects.create(nome=nome, parent=parent)
+        salva_log(request.user, 'Aggiunta', f'Posizione: {nome}')
+        return Response({'success': True, 'id': cassetto.id})
+
+    elif tipo == 'scaffale':
+        parent = Locations.objects.get(id=parent_id) if parent_id else None
+        scaffale = Locations.objects.create(nome=nome, parent=parent)
+        salva_log(request.user, 'Aggiunto', f'Scaffale: {nome}')
+        num_cassetti = int(request.data.get('num_cassetti', 0))
+        for i in range(1, num_cassetti + 1):
+            nome_cassetto = f"Cassetto {str(i).zfill(2)}"
+            Locations.objects.create(nome=nome_cassetto, parent=scaffale)
+        return Response({'success': True, 'id': scaffale.id})
+
+    elif tipo == 'laboratorio':
+        lab = Locations.objects.create(nome=nome, parent=None)
+        salva_log(request.user, 'Aggiunto', f'Laboratorio: {nome}')
+        scaffali_data = request.data.get('scaffali', [])
+        for i, s in enumerate(scaffali_data, 1):
+            nome_scaffale = f"Scaffale {i}"
+            scaffale = Locations.objects.create(nome=nome_scaffale, parent=lab)
+            num_cassetti = int(s.get('num_cassetti', 0))
+            for j in range(1, num_cassetti + 1):
+                nome_cassetto = f"Cassetto {str(j).zfill(2)}"
+                Locations.objects.create(nome=nome_cassetto, parent=scaffale)
+        return Response({'success': True, 'id': lab.id})
+
+    return Response({'errore': 'Tipo non valido'}, status=400)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def elimina_categoria(request, categoria_id):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name not in ['Amministratore', 'Tecnico']:
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        categoria = Categories.objects.get(id=categoria_id)
+    except Categories.DoesNotExist:
+        return Response({'errore': 'Categoria non trovata'}, status=404)
+
+    nome = categoria.nome
+
+    def get_tutti_ids(cat_id):
+        ids = [cat_id]
+        figli = Categories.objects.filter(parent_id=cat_id)
+        for figlio in figli:
+            ids.extend(get_tutti_ids(figlio.id))
+        return ids
+
+    tutti_ids = get_tutti_ids(categoria_id)
+
+    from django.db import connection
+    with connection.cursor() as cursor:
+        placeholders = ','.join(['%s'] * len(tutti_ids))
+        cursor.execute(
+            f"UPDATE components SET categoria = NULL WHERE categoria IN ({placeholders})",
+            tutti_ids
+        )
+
+    Categories.objects.filter(id__in=tutti_ids).delete()
+
+    salva_log(request.user, 'Eliminata', f'Categoria: {nome}')
+    return Response({'success': True})
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def modifica_categoria(request, categoria_id):
+    try:
+        categoria = Categories.objects.get(id=categoria_id)
+    except Categories.DoesNotExist:
+        return Response({'errore': 'Categoria non trovata'}, status=404)
+
+    nome = request.data.get('nome')
+    if nome:
+        categoria.nome = nome
+        categoria.save()
+        salva_log(request.user, 'Modificata', f'Categoria: {nome}')
+
+    return Response({'success': True})
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def elimina_posizione(request, posizione_id):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name not in ['Amministratore', 'Tecnico']:
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        posizione = Locations.objects.get(id=posizione_id)
+    except Locations.DoesNotExist:
+        return Response({'errore': 'Posizione non trovata'}, status=404)
+
+    # elimina ricorsivamente tutti i figli
+    def elimina_ricorsivo(loc_id):
+        figli = Locations.objects.filter(parent=loc_id)
+        for f in figli:
+            elimina_ricorsivo(f.id)
+        Giacenze.objects.filter(cassetto=loc_id).delete()
+        Locations.objects.filter(id=loc_id).delete()
+
+    nome = posizione.nome
+    elimina_ricorsivo(posizione_id)
+    salva_log(request.user, 'Eliminata', f'Posizione: {nome}')
+    return Response({'success': True})
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def modifica_posizione(request, posizione_id):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name not in ['Amministratore', 'Tecnico']:
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        posizione = Locations.objects.get(id=posizione_id)
+    except Locations.DoesNotExist:
+        return Response({'errore': 'Posizione non trovata'}, status=404)
+
+    nome = request.data.get('nome')
+    if nome:
+        posizione.nome = nome
+        posizione.save()
+        salva_log(request.user, 'Modificata', f'Posizione: {nome}')
+
+    return Response({'success': True})
 

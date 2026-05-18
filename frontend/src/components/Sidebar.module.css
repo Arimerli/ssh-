@@ -1,27 +1,34 @@
+/* ─── Sidebar ───────────────────────────────────────────────────────────────── */
+
 .sidebar {
-    width: 200px;
-    height: 100vh;
-    background: var(--bg-sidebar);
-    border-right: 0.5px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    z-index: 10;
-    overflow-y: auto;
-    scrollbar-width: none;
+  width: 200px;
+  height: 100vh;
+  background: var(--bg-sidebar);
+  border-right: 0.5px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  z-index: 30;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* smooth slide-in transition for mobile */
+  transition: transform 0.25s ease;
 }
 
 .sidebar::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
+/* ─── Logo ──────────────────────────────────────────────────────────────────── */
+
 .logoArea {
-  padding: 26px 22px 20px;
+  padding: 1.5rem 1.25rem 1.25rem;
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .logoTitle {
-  font-size: 20px;
+  font-size: 1.2rem;
   font-weight: 500;
   color: var(--text-main);
 }
@@ -31,30 +38,35 @@
 }
 
 .logoSub {
-  font-size: 13px;
+  font-size: 0.78rem;
   color: var(--text-muted);
-  margin-top: 3px;
+  margin-top: 0.2rem;
 }
 
+/* ─── Nav ───────────────────────────────────────────────────────────────────── */
+
 .navGroupLabel {
-  font-size: 12px;
+  font-size: 0.72rem;
   color: var(--nav-label);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 0 18px 8px;
+  padding: 0 1.1rem 0.5rem;
 }
 
 .navGroup {
-  padding: 14px 0 6px;
+  padding: 0.875rem 0 0.375rem;
 }
 
 .navLink {
   display: block;
-  padding: 8px 18px;
-  font-size: 15px;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
   text-decoration: none;
   border-right: 3px solid transparent;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .navLink:hover {
@@ -69,3 +81,22 @@
   border-right: 3px solid var(--accent);
 }
 
+/* ─── Mobile ────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .sidebar {
+    /* Off-screen by default on mobile */
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+
+  /* Slide in when .open is set by App.js */
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  }
+}

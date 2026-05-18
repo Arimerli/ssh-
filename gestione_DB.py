@@ -3,10 +3,11 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 #mi connetto al database di default
 conn = psycopg2.connect(
-    host="localhost", port=5432,
-    dbname="postgres",
+    host="localhost",
+    port=5432,
+    dbname="magazzino_db",
     user="postgres",
-    password="password"
+    password="Admin.07sh"
 )
 #per eseguire subito ogni comando, senza aspettare commit
 conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
@@ -25,9 +26,9 @@ conn.close()
 #mi connetto al mio
 conn = psycopg2.connect(
     host="localhost", port=5432,
-    dbname="database",
+    dbname="magazzino_db",
     user="postgres",
-    password="password"
+    password="Admin.07sh"
 )
 
 cursore = conn.cursor()
