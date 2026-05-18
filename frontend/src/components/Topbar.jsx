@@ -58,7 +58,7 @@ function Topbar({
         <FiSearch className={styles.searchIcon} aria-hidden="true" />
         <input
           type="text"
-          placeholder="Cerca componenti, categorie, utenti..."
+          placeholder="Cerca componenti..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className={styles.searchInput}
