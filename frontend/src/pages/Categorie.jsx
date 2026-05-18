@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCategorie, getComponenti, eliminaCategoria } from "../api/api";
-import { LuCable, LuLayers, LuTag, LuTrash2, LuPencil, LuCheck, LuX } from "react-icons/lu";
+import {
+  LuCable,
+  LuLayers,
+  LuTag,
+  LuTrash2,
+  LuPencil,
+  LuCheck,
+  LuX,
+} from "react-icons/lu";
 import api from "../api/api";
 import styles from "./Categorie.module.css";
 
@@ -13,32 +21,34 @@ function Categorie({ utente }) {
   const [nuovoNome, setNuovoNome] = useState("");
   const navigate = useNavigate();
 
-  const puoModificare = utente?.ruolo === 'Amministratore' || utente?.ruolo === 'Tecnico';
+  const puoModificare =
+    utente?.ruolo === "Amministratore" || utente?.ruolo === "Tecnico";
 
   useEffect(() => {
-    getCategorie().then(res => setCategorie(res.data));
-    getComponenti().then(res => setComponenti(res.data));
+    getCategorie().then((res) => setCategorie(res.data));
+    getComponenti().then((res) => setComponenti(res.data));
   }, []);
 
   function toggleAperto(e, id) {
     e.stopPropagation();
-    setAperti(prev => ({ ...prev, [id]: !prev[id] }));
+    setAperti((prev) => ({ ...prev, [id]: !prev[id] }));
   }
 
   function getTutteLeCategorie(id) {
     const risultato = [id];
-    const figli = categorie.filter(c => c.parent === id);
-    figli.forEach(f => risultato.push(...getTutteLeCategorie(f.id)));
+    const figli = categorie.filter((c) => c.parent === id);
+    figli.forEach((f) => risultato.push(...getTutteLeCategorie(f.id)));
     return risultato;
   }
 
   function contaComponenti(id) {
     const tutteCategorie = getTutteLeCategorie(id);
-    return componenti.filter(c => tutteCategorie.includes(c.categoria)).length;
+    return componenti.filter((c) => tutteCategorie.includes(c.categoria))
+      .length;
   }
 
   function getSottoCategorie(id) {
-    return categorie.filter(c => c.parent === id);
+    return categorie.filter((c) => c.parent === id);
   }
 
   function puoEliminare(id) {
@@ -47,10 +57,11 @@ function Categorie({ utente }) {
 
   async function handleElimina(e, id, nome) {
     e.stopPropagation();
-    if (!window.confirm(`Eliminare "${nome}" e tutte le sue sottocategorie?`)) return;
+    if (!window.confirm(`Eliminare "${nome}" e tutte le sue sottocategorie?`))
+      return;
     await eliminaCategoria(id);
-    getCategorie().then(res => setCategorie(res.data));
-    getComponenti().then(res => setComponenti(res.data));
+    getCategorie().then((res) => setCategorie(res.data));
+    getComponenti().then((res) => setComponenti(res.data));
   }
 
   async function handleModifica(e, id) {
@@ -59,7 +70,7 @@ function Categorie({ utente }) {
     await api.patch(`/categorie/${id}/modifica/`, { nome: nuovoNome });
     setModificaId(null);
     setNuovoNome("");
-    getCategorie().then(res => setCategorie(res.data));
+    getCategorie().then((res) => setCategorie(res.data));
   }
 
   function avviaModifica(e, id, nomeAttuale) {
@@ -82,13 +93,7 @@ function Categorie({ utente }) {
     "rgba(147, 197, 253, 0.20)",
   ];
 
-  const coloriTesto = [
-    "#378ADD",
-    "#60a5fa",
-    "#93c5fd",
-    "#378ADD",
-    "#60a5fa",
-  ];
+  const coloriTesto = ["#378ADD", "#60a5fa", "#93c5fd", "#378ADD", "#60a5fa"];
 
   function getIcona(livello) {
     if (livello === 0) return <LuCable size={16} />;
@@ -103,7 +108,7 @@ function Categorie({ utente }) {
   }
 
   function Nodo({ id, livello }) {
-    const cat = categorie.find(c => c.id === id);
+    const cat = categorie.find((c) => c.id === id);
     if (!cat) return null;
 
     const aperto = aperti[id];
@@ -120,7 +125,10 @@ function Categorie({ utente }) {
           onClick={() => !inModifica && navigate(`/componenti?categoria=${id}`)}
         >
           <div className={styles.info}>
-            <div className={styles.icona} style={{ background: colore, color: coloreTesto }}>
+            <div
+              className={styles.icona}
+              style={{ background: colore, color: coloreTesto }}
+            >
               {getIcona(livello)}
             </div>
             <div>
@@ -129,12 +137,14 @@ function Categorie({ utente }) {
                 <input
                   className={styles.inputModifica}
                   value={nuovoNome}
-                  onChange={e => setNuovoNome(e.target.value)}
-                  onClick={e => e.stopPropagation()}
+                  onChange={(e) => setNuovoNome(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
                   autoFocus
                 />
               ) : (
-                <div className={styles.nome} style={{ color: coloreTesto }}>{cat.nome}</div>
+                <div className={styles.nome} style={{ color: coloreTesto }}>
+                  {cat.nome}
+                </div>
               )}
             </div>
           </div>
@@ -142,7 +152,7 @@ function Categorie({ utente }) {
           <div className={styles.right}>
             {!inModifica && !aperto && haFigli && (
               <div className={styles.sottonomi}>
-                {figli.map(f => f.nome).join(" · ")}
+                {figli.map((f) => f.nome).join(" · ")}
               </div>
             )}
 
@@ -154,10 +164,16 @@ function Categorie({ utente }) {
 
             {puoModificare && inModifica && (
               <>
-                <span className={styles.btnConferma} onClick={e => handleModifica(e, id)}>
+                <span
+                  className={styles.btnConferma}
+                  onClick={(e) => handleModifica(e, id)}
+                >
                   <LuCheck size={14} />
                 </span>
-                <span className={styles.btnAnnullaModifica} onClick={annullaModifica}>
+                <span
+                  className={styles.btnAnnullaModifica}
+                  onClick={annullaModifica}
+                >
                   <LuX size={14} />
                 </span>
               </>
@@ -167,7 +183,7 @@ function Categorie({ utente }) {
               <>
                 <span
                   className={styles.btnModifica}
-                  onClick={e => avviaModifica(e, id, cat.nome)}
+                  onClick={(e) => avviaModifica(e, id, cat.nome)}
                   title="Modifica nome"
                 >
                   <LuPencil size={14} />
@@ -175,7 +191,7 @@ function Categorie({ utente }) {
                 {puoEliminare(id) && (
                   <span
                     className={styles.btnElimina}
-                    onClick={e => handleElimina(e, id, cat.nome)}
+                    onClick={(e) => handleElimina(e, id, cat.nome)}
                     title="Elimina"
                   >
                     <LuTrash2 size={14} />
@@ -185,7 +201,10 @@ function Categorie({ utente }) {
             )}
 
             {haFigli && !inModifica && (
-              <span className={styles.freccia} onClick={e => toggleAperto(e, id)}>
+              <span
+                className={styles.freccia}
+                onClick={(e) => toggleAperto(e, id)}
+              >
                 {aperto ? "▾" : "▸"}
               </span>
             )}
@@ -194,7 +213,7 @@ function Categorie({ utente }) {
 
         {aperto && haFigli && (
           <div className={styles.sottoLista}>
-            {figli.map(figlio => (
+            {figli.map((figlio) => (
               <Nodo key={figlio.id} id={figlio.id} livello={livello + 1} />
             ))}
           </div>
@@ -203,12 +222,12 @@ function Categorie({ utente }) {
     );
   }
 
-  const categorieMadre = categorie.filter(c => c.parent === null);
+  const categorieMadre = categorie.filter((c) => c.parent === null);
 
   return (
     <div className={styles.container}>
       <div className={styles.lista}>
-        {categorieMadre.map(cat => (
+        {categorieMadre.map((cat) => (
           <Nodo key={cat.id} id={cat.id} livello={0} />
         ))}
       </div>

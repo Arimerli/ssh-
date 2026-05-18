@@ -1,347 +1,382 @@
 .container {
-    padding: 24px;
+  padding: 24px;
 }
 
 .titolo {
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 24px;
 }
 
 .titoloAccento {
-    color: var(--accent);
+  color: var(--accent);
 }
 
 .lista {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .labCard {
-    background: var(--bg-sidebar);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    overflow: hidden;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .labHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    cursor: pointer;
-    transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
 .labHeader:hover {
-    background: var(--bg-hover);
+  background: var(--bg-hover);
 }
 
 .labInfo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .labIcona {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: rgba(55, 138, 221, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(55, 138, 221, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 
 .labSotto {
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-    margin-bottom: 2px;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
 }
 
 .labNome {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .freccia {
-    font-size: 16px;
-    color: var(--text-muted);
+  font-size: 16px;
+  color: var(--text-muted);
 }
 
 .labContenuto {
-    padding: 8px 16px 16px;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  padding: 8px 16px 16px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .scaffaleCard {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    overflow: hidden;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .scaffaleHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    cursor: pointer;
-    transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
 .scaffaleHeader:hover {
-    background: var(--bg-hover);
+  background: var(--bg-hover);
 }
 
 .scaffaleInfo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .scaffaleIcona {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
-    background: rgba(139, 92, 246, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(139, 92, 246, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
 }
 
 .scaffaleSotto {
-    font-size: 9px;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-    margin-bottom: 2px;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
 }
 
 .scaffaleNome {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .scaffaleContenuto {
-    border-top: 1px solid var(--border-color);
-    padding: 6px 12px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  border-top: 1px solid var(--border-color);
+  padding: 6px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .cassettoRiga {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .cassettoRiga:hover {
-    border-color: var(--accent);
-    background: var(--bg-hover);
+  border-color: var(--accent);
+  background: var(--bg-hover);
 }
 
 .cassettoIcona {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .cassettoNome {
-    flex: 1;
-    font-size: 13px;
-    color: var(--text-primary);
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-primary);
 }
 
 .cassettoArrow {
-    font-size: 12px;
-    color: var(--text-muted);
-    opacity: 0;
-    transition: opacity 0.15s;
+  font-size: 12px;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.15s;
 }
 
 .cassettoRiga:hover .cassettoArrow {
-    opacity: 1;
+  opacity: 1;
 }
 
 .aggiungiRiga {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border: 1px dashed var(--border-color);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--text-muted);
-    transition: border-color 0.15s, color 0.15s;
-    margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-muted);
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+  margin-top: 4px;
 }
 
 .aggiungiRiga:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .aggiungiLab {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 16px 20px;
-    border: 1px dashed var(--border-color);
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--text-muted);
-    transition: border-color 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-muted);
+  transition:
+    border-color 0.15s,
+    color 0.15s;
 }
 
 .aggiungiLab:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .formInline {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-top: 4px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+  flex-wrap: wrap;
 }
 
 .formScaffale {
-    background: var(--bg-sidebar);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 14px;
-    margin-top: 4px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 4px;
 }
 
 .formLab {
-    background: var(--bg-sidebar);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 20px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
 }
 
 .formTitolo {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 14px;
 }
 
 .formRiga {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .label {
-    font-size: 12px;
-    color: var(--text-muted);
-    min-width: 180px;
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 180px;
 }
 
 .input {
-    flex: 1;
-    height: 34px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 0 10px;
-    font-size: 13px;
-    background: var(--bg-input);
-    color: var(--text-primary);
-    min-width: 160px;
+  flex: 1;
+  height: 34px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 13px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  min-width: 160px;
 }
 
 .input:focus {
-    outline: none;
-    border-color: var(--accent);
+  outline: none;
+  border-color: var(--accent);
 }
 
 .inputNumero {
-    width: 80px;
-    height: 34px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 0 10px;
-    font-size: 13px;
-    background: var(--bg-input);
-    color: var(--text-primary);
+  width: 80px;
+  height: 34px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 13px;
+  background: var(--bg-input);
+  color: var(--text-primary);
 }
 
 .inputNumero:focus {
-    outline: none;
-    border-color: var(--accent);
+  outline: none;
+  border-color: var(--accent);
 }
 
 .formBtns {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .btnCrea {
-    height: 34px;
-    padding: 0 16px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
+  height: 34px;
+  padding: 0 16px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
 .btnAnnulla {
-    height: 34px;
-    padding: 0 14px;
-    background: none;
-    color: var(--text-muted);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
+  height: 34px;
+  padding: 0 14px;
+  background: none;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
 .labRight {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .scaffaleRight {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .btnFiltro {
-    font-size: 11px;
-    color: var(--accent);
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.15s;
-    white-space: nowrap;
+  font-size: 11px;
+  color: var(--accent);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+  white-space: nowrap;
 }
 
 .labHeader:hover .btnFiltro,
 .scaffaleHeader:hover .btnFiltro {
+<<<<<<< HEAD
+  opacity: 1;
+}
+
+.inputModifica {
+  height: 1.75rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.375rem;
+  padding: 0 0.5rem;
+  font-size: 0.875rem;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  outline: none;
+  width: 12rem;
+}
+
+.btnModifica {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  opacity: 0;
+=======
     opacity: 1;
 }
 
@@ -367,11 +402,51 @@
     cursor: pointer;
     transition: color 0.15s, background 0.15s;
     opacity: 0;
+>>>>>>> origin/main
 }
 
 .labHeader:hover .btnModifica,
 .scaffaleHeader:hover .btnModifica,
 .cassettoRiga:hover .btnModifica {
+<<<<<<< HEAD
+  opacity: 1;
+}
+
+.btnModifica:hover {
+  color: var(--accent);
+  background: rgba(55, 138, 221, 0.1);
+}
+
+.btnConferma {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  color: #1d9e75;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btnConferma:hover {
+  background: rgba(29, 158, 117, 0.1);
+}
+
+.btnAnnullaModifica {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  color: #e24b4a;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btnAnnullaModifica:hover {
+  background: rgba(226, 75, 74, 0.1);
+}
+=======
     opacity: 1;
 }
 
@@ -409,3 +484,4 @@
 .btnAnnullaModifica:hover {
     background: rgba(226, 75, 74, 0.1);
 }
+>>>>>>> origin/main

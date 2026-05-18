@@ -1,0 +1,16 @@
+export { default as Acquisti } from "./Acquisti";
+export { default as AggiungiComponente } from "./AggiungiComponente";
+export { default as AggiungiEsperienza } from "./AggiungiEsperienza";
+export { default as AggiungiUtente } from "./AggiungiUtente";
+export { default as Categorie } from "./Categorie";
+export { default as Componenti } from "./Componenti";
+export { default as DettaglioComponente } from "./DettaglioComponente";
+export { default as DettaglioEsperienza } from "./DettaglioEsperienza";
+export { default as Esperienze } from "./Esperienze";
+export { default as Impostazioni } from "./Impostazioni";
+export { default as Login } from "./Login";
+export { default as ModificaComponente } from "./ModificaComponente";
+export { default as ModificaEsperienza } from "./ModificaEsperienza";
+export { default as Posizioni } from "./Posizioni";
+export { default as ResetPassword } from "./ResetPassword";
+export { default as Utenti } from "./Utenti";

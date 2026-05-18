@@ -5,7 +5,7 @@ import {
   getLocations,
   creaPosizione,
   eliminaPosizione,
-  modificaPosizione
+  modificaPosizione,
 } from "../api/api";
 
 import {
@@ -15,7 +15,7 @@ import {
   LuTrash2,
   LuPencil,
   LuCheck,
-  LuX
+  LuX,
 } from "react-icons/lu";
 
 import styles from "./Posizioni.module.css";
@@ -39,7 +39,8 @@ function Posizioni({ utente }) {
   const [modificaId, setModificaId] = useState(null);
   const [nuovoNome, setNuovoNome] = useState("");
 
-  const puoModificare = utente?.ruolo === "Amministratore" || utente?.ruolo === "Tecnico";
+  const puoModificare =
+    utente?.ruolo === "Amministratore" || utente?.ruolo === "Tecnico";
 
   useEffect(() => {
     caricaLocations();
@@ -51,13 +52,15 @@ function Posizioni({ utente }) {
   }
 
   function getFigli(parentId) {
-    return locations.filter(l => l.parent === parentId);
+    return locations.filter((l) => l.parent === parentId);
   }
 
-  const laboratori = locations.filter(l => l.parent === null);
+  const laboratori = locations.filter((l) => l.parent === null);
 
-  const toggleLab = (id) => setLabAperti(prev => ({ ...prev, [id]: !prev[id] }));
-  const toggleScaffale = (id) => setScaffaleAperti(prev => ({ ...prev, [id]: !prev[id] }));
+  const toggleLab = (id) =>
+    setLabAperti((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleScaffale = (id) =>
+    setScaffaleAperti((prev) => ({ ...prev, [id]: !prev[id] }));
 
   function aggiornaNumScaffali(n) {
     const num = parseInt(n) || 1;
@@ -66,7 +69,9 @@ function Posizioni({ utente }) {
   }
 
   function aggiornaCassetti(index, valore) {
-    setCassetti(prev => prev.map((v, i) => (i === index ? parseInt(valore) || 1 : v)));
+    setCassetti((prev) =>
+      prev.map((v, i) => (i === index ? parseInt(valore) || 1 : v)),
+    );
   }
 
   async function handleCreaLab() {
@@ -74,7 +79,7 @@ function Posizioni({ utente }) {
     await creaPosizione({
       tipo: "laboratorio",
       nome: nomeLab,
-      scaffali: cassetti.map(n => ({ num_cassetti: n }))
+      scaffali: cassetti.map((n) => ({ num_cassetti: n })),
     });
     resetForm();
     caricaLocations();
@@ -86,7 +91,7 @@ function Posizioni({ utente }) {
       tipo: "scaffale",
       nome: nomeScaffale,
       parent_id: labId,
-      num_cassetti: numCassetti
+      num_cassetti: numCassetti,
     });
     resetForm();
     caricaLocations();
@@ -97,7 +102,7 @@ function Posizioni({ utente }) {
     await creaPosizione({
       tipo: "cassetto",
       nome: nomeCassetto,
-      parent_id: scaffaleId
+      parent_id: scaffaleId,
     });
     resetForm();
     caricaLocations();
@@ -115,7 +120,8 @@ function Posizioni({ utente }) {
 
   async function handleElimina(e, id, nome) {
     e.stopPropagation();
-    if (!window.confirm(`Eliminare "${nome}" e tutto il suo contenuto?`)) return;
+    if (!window.confirm(`Eliminare "${nome}" e tutto il suo contenuto?`))
+      return;
     await eliminaPosizione(id);
     caricaLocations();
   }
@@ -148,19 +154,31 @@ function Posizioni({ utente }) {
       <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
         {inModifica ? (
           <>
-            <span className={styles.btnConferma} onClick={(e) => handleModifica(e, id)}>
+            <span
+              className={styles.btnConferma}
+              onClick={(e) => handleModifica(e, id)}
+            >
               <LuCheck size={18} />
             </span>
-            <span className={styles.btnAnnullaModifica} onClick={annullaModifica}>
+            <span
+              className={styles.btnAnnullaModifica}
+              onClick={annullaModifica}
+            >
               <LuX size={18} />
             </span>
           </>
         ) : (
           <>
-            <span className={styles.btnModifica} onClick={(e) => avviaModifica(e, id, nome)}>
+            <span
+              className={styles.btnModifica}
+              onClick={(e) => avviaModifica(e, id, nome)}
+            >
               <LuPencil size={18} />
             </span>
-            <span className={styles.btnElimina} onClick={(e) => handleElimina(e, id, nome)}>
+            <span
+              className={styles.btnElimina}
+              onClick={(e) => handleElimina(e, id, nome)}
+            >
               <LuTrash2 size={18} />
             </span>
           </>
@@ -180,8 +198,13 @@ function Posizioni({ utente }) {
           return (
             <div key={lab.id} className={styles.labCard}>
               <div className={styles.labHeader}>
-                <div className={styles.labInfo} onClick={() => !inModificaLab && toggleLab(lab.id)}>
-                  <div className={styles.labIcona}><LuHouse size={20} /></div>
+                <div
+                  className={styles.labInfo}
+                  onClick={() => !inModificaLab && toggleLab(lab.id)}
+                >
+                  <div className={styles.labIcona}>
+                    <LuHouse size={20} />
+                  </div>
                   <div>
                     <div className={styles.labSotto}>LABORATORIO</div>
                     {inModificaLab ? (
@@ -200,12 +223,24 @@ function Posizioni({ utente }) {
 
                 <div className={styles.labRight}>
                   {!inModificaLab && (
-                    <span className={styles.btnFiltro} onClick={() => navigate(`/componenti?posizione=${lab.id}`)}>
+                    <span
+                      className={styles.btnFiltro}
+                      onClick={() =>
+                        navigate(`/componenti?posizione=${lab.id}`)
+                      }
+                    >
                       Vedi tutto →
                     </span>
                   )}
-                  <ActionButtons id={lab.id} nome={lab.nome} inModifica={inModificaLab} />
-                  <span className={styles.freccia} onClick={() => toggleLab(lab.id)}>
+                  <ActionButtons
+                    id={lab.id}
+                    nome={lab.nome}
+                    inModifica={inModificaLab}
+                  />
+                  <span
+                    className={styles.freccia}
+                    onClick={() => toggleLab(lab.id)}
+                  >
                     {aperto ? "▾" : "▸"}
                   </span>
                 </div>
@@ -221,10 +256,19 @@ function Posizioni({ utente }) {
                     return (
                       <div key={scaffale.id} className={styles.scaffaleCard}>
                         <div className={styles.scaffaleHeader}>
-                          <div className={styles.scaffaleInfo} onClick={() => !inModificaScaff && toggleScaffale(scaffale.id)}>
-                            <div className={styles.scaffaleIcona}><LuContainer size={18} /></div>
+                          <div
+                            className={styles.scaffaleInfo}
+                            onClick={() =>
+                              !inModificaScaff && toggleScaffale(scaffale.id)
+                            }
+                          >
+                            <div className={styles.scaffaleIcona}>
+                              <LuContainer size={18} />
+                            </div>
                             <div>
-                              <div className={styles.scaffaleSotto}>SCAFFALE</div>
+                              <div className={styles.scaffaleSotto}>
+                                SCAFFALE
+                              </div>
                               {inModificaScaff ? (
                                 <input
                                   className={styles.inputModifica}
@@ -234,13 +278,22 @@ function Posizioni({ utente }) {
                                   autoFocus
                                 />
                               ) : (
-                                <div className={styles.scaffaleNome}>{scaffale.nome}</div>
+                                <div className={styles.scaffaleNome}>
+                                  {scaffale.nome}
+                                </div>
                               )}
                             </div>
                           </div>
                           <div className={styles.scaffaleRight}>
-                            <ActionButtons id={scaffale.id} nome={scaffale.nome} inModifica={inModificaScaff} />
-                            <span className={styles.freccia} onClick={() => toggleScaffale(scaffale.id)}>
+                            <ActionButtons
+                              id={scaffale.id}
+                              nome={scaffale.nome}
+                              inModifica={inModificaScaff}
+                            />
+                            <span
+                              className={styles.freccia}
+                              onClick={() => toggleScaffale(scaffale.id)}
+                            >
                               {scaffAperto ? "▾" : "▸"}
                             </span>
                           </div>
@@ -254,49 +307,89 @@ function Posizioni({ utente }) {
                                 <div
                                   key={c.id}
                                   className={styles.cassettoRiga}
-                                  onClick={() => !inModificaCass && navigate(`/componenti?posizione=${c.id}`)}
+                                  onClick={() =>
+                                    !inModificaCass &&
+                                    navigate(`/componenti?posizione=${c.id}`)
+                                  }
                                 >
-                                  <div className={styles.labInfo} style={{ flex: 1 }}>
+                                  <div
+                                    className={styles.labInfo}
+                                    style={{ flex: 1 }}
+                                  >
                                     <LuArchive size={16} />
                                     {inModificaCass ? (
                                       <input
                                         className={styles.inputModifica}
                                         value={nuovoNome}
-                                        onChange={(e) => setNuovoNome(e.target.value)}
+                                        onChange={(e) =>
+                                          setNuovoNome(e.target.value)
+                                        }
                                         onClick={(e) => e.stopPropagation()}
                                         autoFocus
                                       />
                                     ) : (
-                                      <span className={styles.cassettoNome}>{c.nome}</span>
+                                      <span className={styles.cassettoNome}>
+                                        {c.nome}
+                                      </span>
                                     )}
                                   </div>
-                                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                    <ActionButtons id={c.id} nome={c.nome} inModifica={inModificaCass} />
-                                    {!inModificaCass && <span className={styles.cassettoArrow}>→</span>}
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: "8px",
+                                    }}
+                                  >
+                                    <ActionButtons
+                                      id={c.id}
+                                      nome={c.nome}
+                                      inModifica={inModificaCass}
+                                    />
+                                    {!inModificaCass && (
+                                      <span className={styles.cassettoArrow}>
+                                        →
+                                      </span>
+                                    )}
                                   </div>
                                 </div>
                               );
                             })}
 
-                            {puoModificare && formAttivo === `cassetto-${scaffale.id}` ? (
+                            {puoModificare &&
+                            formAttivo === `cassetto-${scaffale.id}` ? (
                               <div className={styles.formInline}>
                                 <input
                                   className={styles.input}
                                   value={nomeCassetto}
-                                  onChange={(e) => setNomeCassetto(e.target.value)}
+                                  onChange={(e) =>
+                                    setNomeCassetto(e.target.value)
+                                  }
                                   placeholder="Nome cassetto"
                                   autoFocus
                                 />
-                                <button className={styles.btnCrea} onClick={() => handleCreaCassetto(scaffale.id)}>
+                                <button
+                                  className={styles.btnCrea}
+                                  onClick={() =>
+                                    handleCreaCassetto(scaffale.id)
+                                  }
+                                >
                                   Crea
                                 </button>
-                                <button className={styles.btnAnnulla} onClick={() => setFormAttivo(null)}>
+                                <button
+                                  className={styles.btnAnnulla}
+                                  onClick={() => setFormAttivo(null)}
+                                >
                                   Annulla
                                 </button>
                               </div>
                             ) : (
                               puoModificare && (
-                                <div className={styles.aggiungiRiga} onClick={() => setFormAttivo(`cassetto-${scaffale.id}`)}>
+                                <div
+                                  className={styles.aggiungiRiga}
+                                  onClick={() =>
+                                    setFormAttivo(`cassetto-${scaffale.id}`)
+                                  }
+                                >
                                   + Aggiungi cassetto
                                 </div>
                               )
@@ -326,21 +419,32 @@ function Posizioni({ utente }) {
                           type="number"
                           min="1"
                           value={numCassetti}
-                          onChange={(e) => setNumCassetti(parseInt(e.target.value) || 1)}
+                          onChange={(e) =>
+                            setNumCassetti(parseInt(e.target.value) || 1)
+                          }
                         />
                       </div>
                       <div className={styles.formBtns}>
-                        <button className={styles.btnCrea} onClick={() => handleCreaScaffale(lab.id)}>
+                        <button
+                          className={styles.btnCrea}
+                          onClick={() => handleCreaScaffale(lab.id)}
+                        >
                           Crea
                         </button>
-                        <button className={styles.btnAnnulla} onClick={() => setFormAttivo(null)}>
+                        <button
+                          className={styles.btnAnnulla}
+                          onClick={() => setFormAttivo(null)}
+                        >
                           Annulla
                         </button>
                       </div>
                     </div>
                   ) : (
                     puoModificare && (
-                      <div className={styles.aggiungiRiga} onClick={() => setFormAttivo(`scaffale-${lab.id}`)}>
+                      <div
+                        className={styles.aggiungiRiga}
+                        onClick={() => setFormAttivo(`scaffale-${lab.id}`)}
+                      >
                         + Aggiungi scaffale
                       </div>
                     )
@@ -376,7 +480,9 @@ function Posizioni({ utente }) {
             </div>
             {cassetti.map((n, i) => (
               <div key={i} className={styles.formRiga}>
-                <label className={styles.label}>Scaffale {i + 1} — quanti cassetti</label>
+                <label className={styles.label}>
+                  Scaffale {i + 1} — quanti cassetti
+                </label>
                 <input
                   className={styles.inputNumero}
                   type="number"
@@ -390,14 +496,20 @@ function Posizioni({ utente }) {
               <button className={styles.btnCrea} onClick={handleCreaLab}>
                 Crea laboratorio
               </button>
-              <button className={styles.btnAnnulla} onClick={() => setFormAttivo(null)}>
+              <button
+                className={styles.btnAnnulla}
+                onClick={() => setFormAttivo(null)}
+              >
                 Annulla
               </button>
             </div>
           </div>
         ) : (
           puoModificare && (
-            <div className={styles.aggiungiLab} onClick={() => setFormAttivo("laboratorio")}>
+            <div
+              className={styles.aggiungiLab}
+              onClick={() => setFormAttivo("laboratorio")}
+            >
               + Aggiungi laboratorio
             </div>
           )

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Components, Categories, Locations, Giacenze, Tags, TagComponents, Log, Esperienze, EsperienzeComponents, Acquisti
 
-
 class ComponentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Components

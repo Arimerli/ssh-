@@ -127,7 +127,11 @@ class EsperienzeComponentsViewSet(viewsets.ModelViewSet):
         if esperienza:
             queryset = queryset.filter(esperienza_id=esperienza)
         return queryset
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> origin/main
     def perform_create(self, serializer):
         instance = serializer.save()
 
@@ -525,6 +529,10 @@ def elimina_posizione(request, posizione_id):
     except Locations.DoesNotExist:
         return Response({'errore': 'Posizione non trovata'}, status=404)
 
+<<<<<<< HEAD
+    # elimina ricorsivamente tutti i figli
+=======
+>>>>>>> origin/main
     def elimina_ricorsivo(loc_id):
         figli = Locations.objects.filter(parent=loc_id)
         for f in figli:
@@ -557,5 +565,4 @@ def modifica_posizione(request, posizione_id):
         salva_log(request.user, 'Modificata', f'Posizione: {nome}')
 
     return Response({'success': True})
-
 
