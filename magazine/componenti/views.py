@@ -128,9 +128,43 @@ class EsperienzeComponentsViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(esperienza_id=esperienza)
         return queryset
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+
+        componente_nome = getattr(instance.component, "nome", None) or str(instance.component_id)
+        esperienza_nome = getattr(instance.esperienza, "nome", None) or str(instance.esperienza_id)
+
+        salva_log(
+            self.request.user,
+            "Aggiunta",
+            f"Componente: {componente_nome} aggiunto all'esperienza {esperienza_nome}"
+        )
+
 class AcquistiViewSet(viewsets.ModelViewSet):
     queryset = Acquisti.objects.all()
     serializer_class = AcquistiSerializer
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+
+
+        nome = (
+            getattr(instance, "nome", None)
+            or getattr(instance, "titolo", None)
+            or getattr(instance, "descrizione", None)
+        )
+
+        if not nome and hasattr(instance, "componente"):
+            nome = getattr(instance.componente, "nome", None) or str(instance.componente_id)
+
+        if not nome:
+            nome = f"Acquisto ID {instance.id}"
+
+        salva_log(
+            self.request.user,
+            "Aggiunta",
+            f"Acquisto effettuato: {nome}"
+        )
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

@@ -10,10 +10,16 @@
 
 .tagBar {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px;
     margin-bottom: 15px;
-    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+}
+
+.tagBar::-webkit-scrollbar {
+    display: none;
 }
 
 .tagItem {

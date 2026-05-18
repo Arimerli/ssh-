@@ -36,7 +36,7 @@ function Esperienze({ searchQuery, utente }) {
                     ))}
                 </div>
             </div>
-            <Fab destination="/esperienze/aggiungi" utente={utente} />
+            <Fab destination="/esperienze/aggiungi" utente={utente} ruoli={['Amministratore', 'Tecnici', 'Professori']} />
         </div>
     );
 }
