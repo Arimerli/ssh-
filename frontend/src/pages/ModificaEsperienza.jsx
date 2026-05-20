@@ -14,11 +14,14 @@ function ModificaEsperienza() {
     const [componentiSelezionati, setComponentiSelezionati] = useState([]);
     const [esperienzaComponents, setEsperienzaComponents] = useState([]);
     const [ricerca, setRicerca] = useState("");
+    const [pdf, setPdf] = useState(null);
+    const [pdfAttuale, setPdfAttuale] = useState(null);
 
     useEffect(() => {
         api.get(`/esperienze/${id}/`).then(res => {
             setNome(res.data.nome);
             setDescrizione(res.data.descrizione || "");
+            setPdfAttuale(res.data.pdf || null);
         });
         api.get(`/esperienze-components/?esperienza=${id}`).then(res => {
             setEsperienzaComponents(res.data);
@@ -45,10 +48,15 @@ function ModificaEsperienza() {
             return;
         }
 
-        // aggiorna i dati base
-        await api.patch(`/esperienze/${id}/`, { nome, descrizione });
+        const formData = new FormData();
+        formData.append("nome", nome);
+        formData.append("descrizione", descrizione);
+        if (pdf) formData.append("pdf", pdf);
 
-        // elimina tutti i collegamenti esistenti e ricrea
+        await api.patch(`/esperienze/${id}/`, formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
+
         for (const ec of esperienzaComponents) {
             await api.delete(`/esperienze-components/${ec.id}/`);
         }
@@ -93,6 +101,31 @@ function ModificaEsperienza() {
                         onChange={e => setDescrizione(e.target.value)}
                         rows={3}
                     />
+                </div>
+                <div className={styles.campo}>
+                    <label className={styles.label}>PDF esperienza</label>
+                    {pdfAttuale && !pdf && (
+                        <div style={{ fontSize: 12, color: "var(--accent)", marginBottom: 6 }}>
+                            📄 PDF attuale presente —{" "}
+                            <a href={`http://localhost:8000${pdfAttuale}`}
+                               target="_blank"
+                               rel="noreferrer"
+                               style={{ color: "var(--accent)" }}>
+                                Visualizza
+                            </a>
+                        </div>
+                    )}
+                    <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={e => setPdf(e.target.files[0])}
+                        className={styles.input}
+                    />
+                    {pdf && (
+                        <div style={{ fontSize: 12, color: "var(--accent)", marginTop: 4 }}>
+                            📄 Nuovo PDF: {pdf.name}
+                        </div>
+                    )}
                 </div>
             </div>
 

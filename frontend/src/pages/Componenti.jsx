@@ -14,7 +14,12 @@ function Componenti({ searchQuery, utente }) {
     const [selectedTags, setSelectedTags] = useState([]);
     const [locations, setLocations] = useState([]);
     const [giacenze, setGiacenze] = useState([]);
-    const [popup, setPopup] = useState(null);
+    // coda dei componenti sotto soglia da processare
+    const [coda, setCoda] = useState([]);
+    // indice corrente nella coda
+    const [indiceCoda, setIndiceCoda] = useState(0);
+    // quantità inserita nel popup
+    const [quantitaPopup, setQuantitaPopup] = useState("");
     const navigate = useNavigate();
 
     const [searchParams] = useSearchParams();
@@ -73,7 +78,6 @@ function Componenti({ searchQuery, utente }) {
         });
 
     useEffect(() => {
-        console.log("useEffect eseguito");
         Promise.all([
             getComponenti(),
             getCategorie(),
@@ -107,23 +111,35 @@ function Componenti({ searchQuery, utente }) {
             });
 
             if (daAggiungere.length > 0) {
-                Promise.all(
-                    daAggiungere.map(comp =>
-                        api.post("/acquisti/", {
-                            componente: comp.id,
-                            quantita: comp.pezzi || 1,
-                        })
-                    )
-                ).then(() => {
-                    setPopup(daAggiungere.map(c => c.nome));
-                });
+                setCoda(daAggiungere);
+                setIndiceCoda(0);
+                setQuantitaPopup("");
             }
         });
     }, []);
 
+    // componente corrente nel popup
+    const compCorrente = coda.length > 0 && indiceCoda < coda.length ? coda[indiceCoda] : null;
+
+    async function aggiungiAllaLista() {
+        if (!quantitaPopup || parseInt(quantitaPopup) <= 0) return;
+        await api.post("/acquisti/", {
+            componente: compCorrente.id,
+            quantita: parseInt(quantitaPopup),
+        });
+        const prossimo = indiceCoda + 1;
+        if (prossimo < coda.length) {
+            setIndiceCoda(prossimo);
+            setQuantitaPopup("");
+        } else {
+            setCoda([]);
+        }
+    }
+
     return (
         <div>
-            {popup && (
+            {/* popup componente sotto soglia */}
+            {compCorrente && (
                 <div style={{
                     position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
                     background: "rgba(0,0,0,0.5)", zIndex: 1000,
@@ -133,28 +149,41 @@ function Componenti({ searchQuery, utente }) {
                         background: "var(--bg-sidebar)", border: "1px solid var(--border-color)",
                         borderRadius: 16, padding: 28, maxWidth: 420, width: "90%",
                     }}>
-                        <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 12, color: "var(--text-primary)" }}>
-                            <span style={{ color: "var(--accent)" }}>Lista acquisti</span> aggiornata
+                        <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 8, color: "var(--text-primary)" }}>
+                            <span style={{ color: "var(--accent)" }}>{compCorrente.nome}</span> è sotto la quantità minima
                         </div>
-                        <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16, lineHeight: 1.6 }}>
-                            I seguenti componenti sono sotto la quantità minima e sono stati aggiunti automaticamente alla lista acquisti:
+                        {coda.length > 1 && (
+                            <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 14 }}>
+                                {indiceCoda + 1} di {coda.length}
+                            </div>
+                        )}
+                        <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>
+                            Quanti pezzi vuoi aggiungere alla lista acquisti?
                         </div>
-                        <ul style={{ margin: "0 0 20px 0", padding: "0 0 0 18px" }}>
-                            {popup.map((nome, i) => (
-                                <li key={i} style={{ fontSize: 13, color: "var(--text-primary)", marginBottom: 4 }}>
-                                    {nome}
-                                </li>
-                            ))}
-                        </ul>
+                        <input
+                            type="number"
+                            value={quantitaPopup}
+                            onChange={e => setQuantitaPopup(e.target.value)}
+                            placeholder="es. 50"
+                            style={{
+                                width: "100%", height: 38, border: "1px solid var(--border-color)",
+                                borderRadius: 8, padding: "0 12px", fontSize: 14,
+                                background: "var(--bg-input)", color: "var(--text-primary)",
+                                marginBottom: 16, boxSizing: "border-box"
+                            }}
+                            autoFocus
+                        />
                         <button
-                            onClick={() => setPopup(null)}
+                            onClick={aggiungiAllaLista}
+                            disabled={!quantitaPopup || parseInt(quantitaPopup) <= 0}
                             style={{
                                 width: "100%", height: 38, background: "var(--accent)",
                                 color: "#fff", border: "none", borderRadius: 8,
-                                fontSize: 13, fontWeight: 500, cursor: "pointer"
+                                fontSize: 13, fontWeight: 500, cursor: "pointer",
+                                opacity: (!quantitaPopup || parseInt(quantitaPopup) <= 0) ? 0.5 : 1
                             }}
                         >
-                            OK
+                            {indiceCoda + 1 < coda.length ? "Aggiungi e continua" : "Aggiungi alla lista"}
                         </button>
                     </div>
                 </div>

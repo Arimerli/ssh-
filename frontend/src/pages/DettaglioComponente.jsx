@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
     getComponente,
     getGiacenze,
@@ -14,6 +14,11 @@ import styles from "./DettaglioComponente.module.css";
 function DettaglioComponente({ utente }) {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    // legge da dove si è arrivati
+    const from = searchParams.get("from");
+    const esperienzaId = searchParams.get("esperienzaId");
 
     const [componente, setComponente] = useState(null);
     const [giacenze, setGiacenze] = useState([]);
@@ -21,8 +26,6 @@ function DettaglioComponente({ utente }) {
     const [locations, setLocations] = useState([]);
     const [tags, setTags] = useState([]);
     const [tagComponents, setTagComponents] = useState([]);
-
-    const [tutteGiacenze, setTutteGiacenze] = useState([]);
 
 useEffect(() => {
     getComponente(id).then(res => setComponente(res.data));
@@ -36,11 +39,20 @@ useEffect(() => {
     getTagComponents().then(res => setTagComponents(res.data));
 }, [id]);
 
+    function tornaIndietro() {
+        if (from === "esperienze" && esperienzaId) {
+            navigate(`/esperienze/${esperienzaId}`);
+        } else {
+            navigate("/componenti");
+        }
+    }
+
     async function handleElimina() {
         if (!window.confirm(`Sei sicuro di voler eliminare "${componente.nome}"?`)) return;
         await api.delete(`/components/${id}/`);
         navigate("/componenti");
     }
+
     function breadcrumb(lista, itemId) {
         const percorso = [];
         let corrente = lista.find(x => x.id === itemId);
@@ -77,7 +89,7 @@ useEffect(() => {
         <div className={styles.container}>
 
             <div className={styles.header}>
-                <button className={styles.back} onClick={() => navigate("/componenti")}>
+                <button className={styles.back} onClick={tornaIndietro}>
                     ← Torna indietro
                 </button>
                 {(utente?.ruolo === 'Amministratore' || utente?.ruolo === 'Tecnico') && (

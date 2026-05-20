@@ -20,7 +20,6 @@ function DettaglioEsperienza({ utente }) {
     }, [id]);
 
     async function elimina() {
-        // elimina prima i collegamenti componenti
         for (const ec of esperienzaComponents) {
             await api.delete(`/esperienze-components/${ec.id}/`);
         }
@@ -33,7 +32,6 @@ function DettaglioEsperienza({ utente }) {
     return (
         <div className={styles.container}>
 
-            {/* header con torna indietro e titolo */}
             <div className={styles.header}>
                 <button className={styles.back} onClick={() => navigate("/esperienze")}>
                     ← Torna indietro
@@ -44,16 +42,37 @@ function DettaglioEsperienza({ utente }) {
                 </h1>
             </div>
 
-            {/* dati principali */}
             <div className={styles.sezione}>
                 <div className={styles.sezioneLabel}>Informazioni</div>
                 <div className={styles.nome}>{esperienza.nome}</div>
                 {esperienza.descrizione && (
                     <div className={styles.descrizione}>{esperienza.descrizione}</div>
                 )}
+               {esperienza.pdf && (
+    <div style={{ marginTop: 12 }}>
+        <button
+            onClick={async () => {
+                const url = esperienza.pdf.startsWith('http')
+                    ? esperienza.pdf
+                    : `http://localhost:8000${esperienza.pdf}`;
+                const res = await fetch(url);
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                window.open(blobUrl, "_blank");
+            }}
+            style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                fontSize: 13, color: "var(--accent)", background: "transparent",
+                border: "1px solid var(--accent)", borderRadius: 8,
+                padding: "6px 12px", cursor: "pointer"
+            }}
+        >
+            📄 Visualizza PDF
+        </button>
+    </div>
+)}
             </div>
 
-            {/* componenti usati */}
             <div className={styles.sezione}>
                 <div className={styles.sezioneLabel}>Componenti utilizzati</div>
                 {esperienzaComponents.length === 0 ? (
@@ -66,7 +85,7 @@ function DettaglioEsperienza({ utente }) {
                                 <div
                                     key={ec.id}
                                     className={styles.componenteRiga}
-                                    onClick={() => navigate(`/componenti/${comp.id}`)}
+                                    onClick={() => navigate(`/componenti/${comp.id}?from=esperienze&esperienzaId=${id}`)}
                                 >
                                     <span className={styles.componenteNome}>{comp.nome}</span>
                                     <span className={styles.componenteArrow}>→</span>
@@ -77,7 +96,6 @@ function DettaglioEsperienza({ utente }) {
                 )}
             </div>
 
-            {/* azioni */}
             {(utente?.ruolo === 'Amministratore' || utente?.ruolo === 'Tecnico') && (
                 <div className={styles.azioni}>
                     <button
