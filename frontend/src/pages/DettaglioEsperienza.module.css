@@ -1,174 +1,174 @@
 .container {
-    padding: 24px;
+  padding: 24px;
 }
 
 .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
 }
 
 .back {
-    background: none;
-    border: none;
-    color: var(--accent);
-    font-size: 13px;
-    cursor: pointer;
-    padding: 0;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
 }
 
 .back:hover {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .titolo {
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
 }
 
 .titoloAccento {
-    color: var(--accent);
+  color: var(--accent);
 }
 
 .sezione {
-    background: var(--bg-sidebar);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 16px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
 }
 
 .sezioneLabel {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin-bottom: 14px;
-    font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 14px;
+  font-weight: 500;
 }
 
 .nome {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--text-primary);
-    margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
 }
 
 .descrizione {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.6;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
 .vuoto {
-    font-size: 13px;
-    color: var(--text-muted);
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .listaComponenti {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .componenteRiga {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    cursor: pointer;
-    transition: 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: 0.15s;
 }
 
 .componenteRiga:hover {
-    border-color: var(--accent);
-    background: var(--bg-hover);
+  border-color: var(--accent);
+  background: var(--bg-hover);
 }
 
 .componenteNome {
-    font-size: 13px;
-    color: var(--text-primary);
+  font-size: 13px;
+  color: var(--text-primary);
 }
 
 .componenteArrow {
-    font-size: 13px;
-    color: var(--accent);
-    opacity: 0.6;
+  font-size: 13px;
+  color: var(--accent);
+  opacity: 0.6;
 }
 
 .azioni {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-top: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
 }
 
 .btnModifica {
-    height: 38px;
-    padding: 0 20px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: opacity 0.15s;
+  height: 38px;
+  padding: 0 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
 
 .btnModifica:hover {
-    opacity: 0.9;
+  opacity: 0.9;
 }
 
 .btnElimina {
-    height: 38px;
-    padding: 0 20px;
-    background: none;
-    color: #e05c5c;
-    border: 1px solid #e05c5c44;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: 0.15s;
+  height: 38px;
+  padding: 0 20px;
+  background: none;
+  color: #e05c5c;
+  border: 1px solid #e05c5c44;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.15s;
 }
 
 .btnElimina:hover {
-    background: #e05c5c22;
+  background: #e05c5c22;
 }
 
 .conferma {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .confermaTestp {
-    font-size: 13px;
-    color: var(--text-muted);
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .btnConfermaElimina {
-    height: 38px;
-    padding: 0 16px;
-    background: #e05c5c;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
+  height: 38px;
+  padding: 0 16px;
+  background: #e05c5c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
 .btnAnnulla {
-    height: 38px;
-    padding: 0 16px;
-    background: none;
-    color: var(--text-muted);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
+  height: 38px;
+  padding: 0 16px;
+  background: none;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
 }

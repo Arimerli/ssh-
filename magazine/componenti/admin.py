@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Categories, Components, Tags, TagComponents,
-    Locations, Giacenze, Esperienze, EsperienzeComponents,Acquisti
+    Locations, Giacenze, Esperienze, EsperienzeComponents, Acquisti
 )
 
 admin.site.register(Categories)

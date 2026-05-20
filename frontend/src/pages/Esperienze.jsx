@@ -5,40 +5,44 @@ import Fab from "../components/Fab";
 import api from "../api/api";
 
 function Esperienze({ searchQuery, utente }) {
-    const [esperienze, setEsperienze] = useState([]);
-    const navigate = useNavigate();
+  const [esperienze, setEsperienze] = useState([]);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        api.get("/esperienze/").then(res => setEsperienze(res.data));
-    }, []);
+  useEffect(() => {
+    api.get("/esperienze/").then((res) => setEsperienze(res.data));
+  }, []);
 
-    const esperienzeFiltrate = esperienze.filter(e =>
-        e.nome.toLowerCase().includes((searchQuery || "").toLowerCase())
-    );
+  const esperienzeFiltrate = esperienze.filter((e) =>
+    e.nome.toLowerCase().includes((searchQuery || "").toLowerCase()),
+  );
 
-    return (
-        <div>
-            <div className={styles.container}>
-                <div className={styles.griglia}>
-                    {esperienzeFiltrate.map(esperienza => (
-                        <div
-                            key={esperienza.id}
-                            className={styles.card}
-                            onClick={() => navigate(`/esperienze/${esperienza.id}`)}
-                        >
-                            <div className={styles.nome}>{esperienza.nome}</div>
-                            {esperienza.descrizione && (
-                                <div className={styles.descrizione}>
-                                    {esperienza.descrizione}
-                                </div>
-                            )}
-                        </div>
-                    ))}
+  return (
+    <div>
+      <div className={styles.container}>
+        <div className={styles.griglia}>
+          {esperienzeFiltrate.map((esperienza) => (
+            <div
+              key={esperienza.id}
+              className={styles.card}
+              onClick={() => navigate(`/esperienze/${esperienza.id}`)}
+            >
+              <div className={styles.nome}>{esperienza.nome}</div>
+              {esperienza.descrizione && (
+                <div className={styles.descrizione}>
+                  {esperienza.descrizione}
                 </div>
+              )}
             </div>
-            <Fab destination="/esperienze/aggiungi" utente={utente} />
+          ))}
         </div>
-    );
+      </div>
+      <Fab
+        destination="/esperienze/aggiungi"
+        utente={utente}
+        ruoli={["Amministratore", "Tecnici", "Professori"]}
+      />
+    </div>
+  );
 }
 
 export default Esperienze;

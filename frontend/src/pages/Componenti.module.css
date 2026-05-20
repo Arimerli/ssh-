@@ -1,61 +1,79 @@
+/* ─── Componenti.module.css ─────────────────────────────────────────────────── */
+
 .container {
-    padding-top: 2px;
+  padding-top: 2px;
 }
 
+/* Responsive card grid: minimum 200px, fills available space */
 .griglia {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
 .tagBar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 15px;
-    align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  margin-bottom: 0.875rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.tagBar::-webkit-scrollbar {
+  display: none;
 }
 
 .tagItem {
-    padding: 6px 10px;
-    border-radius: 12px;
-    background: var(--bg-tags);
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 13px;
-    transition: 0.2s;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.75rem;
+  background: var(--bg-tags);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .tagItem:hover {
-    background: #378ADD33;
-    color: #378ADD;
+  background: #378add33;
+  color: #378add;
 }
 
 .active {
-    background: #378ADD;
-    color: white;
+  background: #378add;
+  color: white;
 }
 
 .categoriaBadge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    border-radius: 12px;
-    border: 1px dashed var(--accent);
-    color: var(--accent);
-    font-size: 13px;
-    cursor: pointer;
-    transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.75rem;
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
 .categoriaBadge:hover {
-    background: #378ADD22;
+  background: #378add22;
 }
 
 .badgeX {
-    font-size: 14px;
-    font-weight: 500;
-    opacity: 0.7;
-    line-height: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  opacity: 0.7;
+  line-height: 1;
+}
+
+@media (max-width: 480px) {
+  /* On very small phones, 1 column only */
+  .griglia {
+    grid-template-columns: 1fr;
+  }
 }

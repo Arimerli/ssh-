@@ -127,10 +127,48 @@ class EsperienzeComponentsViewSet(viewsets.ModelViewSet):
         if esperienza:
             queryset = queryset.filter(esperienza_id=esperienza)
         return queryset
+<<<<<<< HEAD
+    
+=======
+
+>>>>>>> origin/main
+    def perform_create(self, serializer):
+        instance = serializer.save()
+
+        componente_nome = getattr(instance.component, "nome", None) or str(instance.component_id)
+        esperienza_nome = getattr(instance.esperienza, "nome", None) or str(instance.esperienza_id)
+
+        salva_log(
+            self.request.user,
+            "Aggiunta",
+            f"Componente: {componente_nome} aggiunto all'esperienza {esperienza_nome}"
+        )
 
 class AcquistiViewSet(viewsets.ModelViewSet):
     queryset = Acquisti.objects.all()
     serializer_class = AcquistiSerializer
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+
+
+        nome = (
+            getattr(instance, "nome", None)
+            or getattr(instance, "titolo", None)
+            or getattr(instance, "descrizione", None)
+        )
+
+        if not nome and hasattr(instance, "componente"):
+            nome = getattr(instance.componente, "nome", None) or str(instance.componente_id)
+
+        if not nome:
+            nome = f"Acquisto ID {instance.id}"
+
+        salva_log(
+            self.request.user,
+            "Aggiunta",
+            f"Acquisto effettuato: {nome}"
+        )
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -186,7 +224,7 @@ def reset_password(request, user_id):
     if utente.email:
         send_mail(
             subject='Reset password — AjaksInventory',
-            message=f'Salve {utente.first_name},\n\nLa tua password è stata resettata dall\'amministratore.\n\nPassword temporanea: {password_temp}\n\nAccedi e cambiala subito dalla pagina Impostazioni.\n\nAjaksInventory — ITI E. Fermi Modena',
+            message=f'Salve {utente.first_name},\n\nLa tua password è stata resettata dall\'amministratore.\n\nPassword temporanea: {password_temp}\n\nAccedi e cambiala subito dalla pagina Impostazioni.\n\nAjaksInventory — ITIS E. Fermi Modena',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[utente.email],
         )
@@ -251,7 +289,7 @@ def crea_utente(request):
     if email:
         send_mail(
             subject='Benvenuto su AjaksInventory',
-            message=f'Salve {nome} {cognome},\n\nIl tuo account è stato creato.\n\nPassword temporanea: {password_temp}\n\nAccedi con la tua email istituzionale e cambia la password dalla pagina Impostazioni.\n\nAjaksInventory — ITI E. Fermi Modena',
+            message=f'Salve {nome} {cognome},\n\nIl tuo account è stato creato.\n\nPassword temporanea: {password_temp}\n\nAccedi con la tua email istituzionale e cambia la password dalla pagina Impostazioni.\n\nAjaksInventory — ITIS E. Fermi Modena',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
         )
@@ -426,4 +464,105 @@ def crea_posizione_completa(request):
 
     return Response({'errore': 'Tipo non valido'}, status=400)
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def elimina_categoria(request, categoria_id):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name not in ['Amministratore', 'Tecnico']:
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        categoria = Categories.objects.get(id=categoria_id)
+    except Categories.DoesNotExist:
+        return Response({'errore': 'Categoria non trovata'}, status=404)
+
+    nome = categoria.nome
+
+    def get_tutti_ids(cat_id):
+        ids = [cat_id]
+        figli = Categories.objects.filter(parent_id=cat_id)
+        for figlio in figli:
+            ids.extend(get_tutti_ids(figlio.id))
+        return ids
+
+    tutti_ids = get_tutti_ids(categoria_id)
+
+    from django.db import connection
+    with connection.cursor() as cursor:
+        placeholders = ','.join(['%s'] * len(tutti_ids))
+        cursor.execute(
+            f"UPDATE components SET categoria = NULL WHERE categoria IN ({placeholders})",
+            tutti_ids
+        )
+
+    Categories.objects.filter(id__in=tutti_ids).delete()
+
+    salva_log(request.user, 'Eliminata', f'Categoria: {nome}')
+    return Response({'success': True})
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def modifica_categoria(request, categoria_id):
+    try:
+        categoria = Categories.objects.get(id=categoria_id)
+    except Categories.DoesNotExist:
+        return Response({'errore': 'Categoria non trovata'}, status=404)
+
+    nome = request.data.get('nome')
+    if nome:
+        categoria.nome = nome
+        categoria.save()
+        salva_log(request.user, 'Modificata', f'Categoria: {nome}')
+
+    return Response({'success': True})
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def elimina_posizione(request, posizione_id):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name not in ['Amministratore', 'Tecnico']:
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        posizione = Locations.objects.get(id=posizione_id)
+    except Locations.DoesNotExist:
+        return Response({'errore': 'Posizione non trovata'}, status=404)
+
+<<<<<<< HEAD
+    # elimina ricorsivamente tutti i figli
+=======
+>>>>>>> origin/main
+    def elimina_ricorsivo(loc_id):
+        figli = Locations.objects.filter(parent=loc_id)
+        for f in figli:
+            elimina_ricorsivo(f.id)
+        Giacenze.objects.filter(cassetto=loc_id).delete()
+        Locations.objects.filter(id=loc_id).delete()
+
+    nome = posizione.nome
+    elimina_ricorsivo(posizione_id)
+    salva_log(request.user, 'Eliminata', f'Posizione: {nome}')
+    return Response({'success': True})
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def modifica_posizione(request, posizione_id):
+    gruppo = request.user.groups.first()
+    if not gruppo or gruppo.name not in ['Amministratore', 'Tecnico']:
+        return Response({'errore': 'Non autorizzato'}, status=403)
+
+    try:
+        posizione = Locations.objects.get(id=posizione_id)
+    except Locations.DoesNotExist:
+        return Response({'errore': 'Posizione non trovata'}, status=404)
+
+    nome = request.data.get('nome')
+    if nome:
+        posizione.nome = nome
+        posizione.save()
+        salva_log(request.user, 'Modificata', f'Posizione: {nome}')
+
+    return Response({'success': True})
 
