@@ -348,7 +348,6 @@
 }
 
 .successo {
-<<<<<<< HEAD
   font-size: 0.75rem;
   color: #1d9e75;
   margin-bottom: 0.75rem;
@@ -380,26 +379,4 @@
   .btnSalva {
     max-width: 100%;
   }
-=======
-    font-size: 12px;
-    color: #1D9E75;
-    margin-bottom: 12px;
-}
-.textarea {
-    width: 100%;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 13px;
-    background: var(--bg-input);
-    color: var(--text-primary);
-    box-sizing: border-box;
-    resize: vertical;
-    font-family: inherit;
-}
-
-.textarea:focus {
-    outline: none;
-    border-color: var(--accent);
->>>>>>> origin/main
 }
