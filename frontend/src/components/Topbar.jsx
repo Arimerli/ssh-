@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { LuLogOut, LuMenu } from "react-icons/lu";
 import styles from "./Topbar.module.css";
@@ -13,6 +14,9 @@ function Topbar({
   onMenuClick,
 }) {
   const navigate = useNavigate();
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const getInitials = (ruolo) => {
     if (!ruolo) return "?";
@@ -41,6 +45,20 @@ function Topbar({
     setUtente(null);
     navigate("/login");
   };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className={styles.topbar}>
@@ -79,22 +97,42 @@ function Topbar({
       <div className={styles.rightSection}>
         <ThemeToggle />
 
-        <div className={styles.userArea}>
-          <div
+        <div className={styles.userArea} ref={dropdownRef}>
+          <button
             className={`${styles.userAvatar} ${getAvatarClass(utente?.ruolo)}`}
+            onClick={() => setDropdownOpen((prev) => !prev)}
           >
             {getInitials(utente?.ruolo)}
-          </div>
-          {/* Hide name/role on small screens to save space */}
+          </button>
+
+          {/* Desktop info */}
           <div className={styles.userInfo}>
             <div className={styles.userName}>
               {utente?.nome} {utente?.cognome}
             </div>
+
             <div className={styles.userRole}>{utente?.ruolo}</div>
+
             <span className={styles.logoutLink} onClick={handleLogout}>
               <LuLogOut aria-hidden="true" /> Logout
             </span>
           </div>
+
+          {/* Mobile dropdown */}
+          {dropdownOpen && (
+            <div className={styles.dropdown}>
+              <div className={styles.dropdownName}>
+                {utente?.nome} {utente?.cognome}
+              </div>
+
+              <div className={styles.dropdownEmail}>{utente?.email}</div>
+
+              <button className={styles.dropdownLogout} onClick={handleLogout}>
+                <LuLogOut />
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

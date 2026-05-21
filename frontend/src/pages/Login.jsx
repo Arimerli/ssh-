@@ -48,7 +48,12 @@ function Login({ setUtente }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)} //aggiorna la variabile ad ogni tasto premuto
             placeholder="Inserisci password"
-            onKeyDown={(e) => e.key === "Enter" && handleLogin()} //se premo invio prova il login
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleLogin();
+              }
+            }}
           />
         </div>
         {errore && (

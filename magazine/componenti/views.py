@@ -127,7 +127,7 @@ class EsperienzeComponentsViewSet(viewsets.ModelViewSet):
         if esperienza:
             queryset = queryset.filter(esperienza_id=esperienza)
         return queryset
-
+    
     def perform_create(self, serializer):
         instance = serializer.save()
         componente_nome = getattr(instance.component, "nome", None) or str(instance.component_id)

@@ -1,13 +1,41 @@
 import { NavLink } from "react-router-dom";
+import { useEffect, useRef } from "react";
+
 import styles from "./Sidebar.module.css";
 function Sidebar({ isOpen, onClose, onNavigate, utente }) {
+  const sidebarRef = useRef(null);
+
   const handleNav = () => {
     onNavigate?.();
     onClose?.();
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // only on mobile
+      if (window.innerWidth > 768) return;
+
+      // only if sidebar open
+      if (!isOpen) return;
+
+      // click outside sidebar
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        onClose?.();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
   return (
-    <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
+    <div
+      ref={sidebarRef}
+      className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}
+    >
       <div className={styles.logoArea}>
         <div className={styles.logoTitle}>
           <span>Ajaks</span>inventory

@@ -18,11 +18,20 @@
   color: var(--accent);
 }
 
-.label {
-
-}
-
 .button:hover {
   background-color: var(--bg-hover);
   border-color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .button {
+    padding: 8px;
+    gap: 0;
+    min-width: 40px;
+    justify-content: center;
+  }
+
+  .label {
+    display: none;
+  }
 }
