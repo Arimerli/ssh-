@@ -1,5 +1,5 @@
 .container {
-  padding: 3%;
+  padding: 1.5rem;
 }
 
 .titolo {
@@ -68,6 +68,10 @@
 .nome {
   font-size: 0.9375rem;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .right {
@@ -204,4 +208,32 @@
 
 .btnAnnullaModifica:hover {
   background: rgba(226, 75, 74, 0.1);
+}
+
+/* ─── Mobile ────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .riga {
+    padding: 0.875rem 1rem;
+  }
+
+  .sottonomi {
+    display: none;
+  }
+
+  /* Hide the sub-category count badge on tiny screens to save space */
+  .badge {
+    display: none;
+  }
+
+  .nome {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
 }
