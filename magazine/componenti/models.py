@@ -43,8 +43,14 @@ class Esperienze(models.Model):
 
 
 class EsperienzeComponents(models.Model):
-    esperienza = models.ForeignKey(Esperienze, models.DO_NOTHING)
-    component = models.ForeignKey(Components, models.DO_NOTHING)
+    esperienza = models.ForeignKey(Esperienze, models.DO_NOTHING, null = True, blank = True)
+    
+    component = models.ForeignKey(
+        Components,
+        models.DO_NOTHING,
+        null=True,
+        blank=True
+    )
 
     # mostra esperienza e componente collegati
     def __str__(self):
@@ -133,6 +139,7 @@ class Acquisti(models.Model):
         return f"{self.componente} — {self.quantita} pz"
 
     class Meta:
+        managed = False
         db_table = 'acquisti'
         ordering = ['-data']
 
@@ -143,5 +150,6 @@ class Log(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        managed = False
         db_table = 'log'
         ordering = ['-timestamp']
