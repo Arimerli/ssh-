@@ -1,48 +1,144 @@
 .container {
-  padding-top: 2px;
+    padding: 24px;
 }
 
-.griglia {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+.titolo {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin: 0 0 20px 0;
 }
 
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.nome {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--nome-card);
-  margin-bottom: 10px;
-}
-
-.info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.quantita {
-  font-size: 13px;
-  color: var(--accent);
-  font-weight: 500;
-}
-
-.data {
-  font-size: 11px;
-  color: var(--text-muted);
+.titoloAccento {
+    color: var(--muted);
 }
 
 .vuoto {
-  font-size: 13px;
-  color: var(--text-muted);
-  grid-column: 1 / -1;
-  padding: 20px 0;
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 20px 0;
+}
+
+.lista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.riga {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 10px;
+    padding: 14px 18px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.rigaNome {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--nome-card);
+}
+
+.rigaCentro {
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+}
+
+.quantita {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.modificaInline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.inputQuantita {
+    width: 70px;
+    height: 30px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0 8px;
+    font-size: 13px;
+    background: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.rigaDestra {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.data {
+    font-size: 11px;
+    color: var(--text-muted);
+    min-width: 80px;
+    text-align: right;
+}
+
+.btnModifica {
+    height: 30px;
+    padding: 0 12px;
+    background: none;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.btnModifica:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+.btnSalva {
+    height: 30px;
+    padding: 0 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btnAnnulla {
+    height: 30px;
+    padding: 0 12px;
+    background: none;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.btnElimina {
+    width: 30px;
+    height: 30px;
+    background: none;
+    color: #e05c5c;
+    border: 1px solid #e05c5c44;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.15s;
+}
+
+.btnElimina:hover {
+    background: #e05c5c22;
 }
