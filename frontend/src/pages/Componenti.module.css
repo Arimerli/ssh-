@@ -1,10 +1,7 @@
-/* ─── Componenti.module.css ─────────────────────────────────────────────────── */
-
 .container {
   padding-top: 2px;
 }
 
-/* Responsive card grid: minimum 200px, fills available space */
 .griglia {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -19,6 +16,7 @@
   overflow-x: auto;
   scrollbar-width: none;
   padding-bottom: 4px;
+  align-items: center;
 }
 
 .tagBar::-webkit-scrollbar {
@@ -35,6 +33,11 @@
   transition:
     background 0.2s,
     color 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+  max-width: 7rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tagItem:hover {
@@ -58,6 +61,16 @@
   font-size: 0.8rem;
   cursor: pointer;
   transition: background 0.2s;
+  flex-shrink: 0;
+  max-width: 8rem;
+  white-space: nowrap;
+}
+
+.categoriaBadgeLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .categoriaBadge:hover {
@@ -69,10 +82,10 @@
   font-weight: 500;
   opacity: 0.7;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 @media (max-width: 480px) {
-  /* On very small phones, 1 column only */
   .griglia {
     grid-template-columns: 1fr;
   }

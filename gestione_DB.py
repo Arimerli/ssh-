@@ -12,6 +12,7 @@ conn = psycopg2.connect(
     user= os.getenv('DB_USER'),
     password= os.getenv('DB_PASSWORD')
 )
+
 #per eseguire subito ogni comando, senza aspettare commit
 conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 

@@ -67,7 +67,7 @@ function Categorie({ utente }) {
   async function handleModifica(e, id) {
     e.stopPropagation();
     if (!nuovoNome.trim()) return;
-    await api.patch(`/categorie/${id}/modifica/`, { nome: nuovoNome });
+    await api.patch(`/categories/${id}/modifica/`, { nome: nuovoNome });
     setModificaId(null);
     setNuovoNome("");
     getCategorie().then((res) => setCategorie(res.data));
@@ -96,9 +96,9 @@ function Categorie({ utente }) {
   const coloriTesto = ["#378ADD", "#60a5fa", "#93c5fd", "#378ADD", "#60a5fa"];
 
   function getIcona(livello) {
-    if (livello === 0) return <LuCable size={16} />;
-    if (livello === 1) return <LuLayers size={14} />;
-    return <LuTag size={13} />;
+    if (livello === 0) return <LuCable size={14} />;
+    if (livello === 1) return <LuLayers size={12} />;
+    return <LuTag size={11} />;
   }
 
   function getLivelloLabel(livello) {
