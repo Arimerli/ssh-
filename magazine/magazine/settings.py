@@ -154,3 +154,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'arianna.merli@fermi.mo.it'
 EMAIL_HOST_PASSWORD = 'xbmlryepftsgfqel'
 DEFAULT_FROM_EMAIL = 'arianna.merli@fermi.mo.it'
+
+import os
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -130,10 +130,8 @@ class EsperienzeComponentsViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         instance = serializer.save()
-
         componente_nome = getattr(instance.component, "nome", None) or str(instance.component_id)
         esperienza_nome = getattr(instance.esperienza, "nome", None) or str(instance.esperienza_id)
-
         salva_log(
             self.request.user,
             "Aggiunta",
@@ -146,20 +144,15 @@ class AcquistiViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         instance = serializer.save()
-
-
         nome = (
             getattr(instance, "nome", None)
             or getattr(instance, "titolo", None)
             or getattr(instance, "descrizione", None)
         )
-
         if not nome and hasattr(instance, "componente"):
             nome = getattr(instance.componente, "nome", None) or str(instance.componente_id)
-
         if not nome:
             nome = f"Acquisto ID {instance.id}"
-
         salva_log(
             self.request.user,
             "Aggiunta",
@@ -181,7 +174,6 @@ def utente_corrente(request):
     })
 
 @api_view(['POST'])
-#@csrf_exempt
 def utente_logout(request):
     return Response({'success': True})
 
@@ -197,7 +189,6 @@ def cambia_password(request):
 
     utente.set_password(nuova)
     utente.save()
-
     update_session_auth_hash(request, utente)
     return Response({'success': True})
 
@@ -230,15 +221,25 @@ def reset_password(request, user_id):
         'password_temporanea': password_temp
     })
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def aggiorna_profilo(request):
-    utente = request.user
+    user = request.user
     email = request.data.get('email')
+    first_name = request.data.get('first_name', '')
+    last_name = request.data.get('last_name', '')
 
-    utente.email = email
-    utente.save()
+    if not email:
+        return Response({'errore': 'Email obbligatoria'}, status=400)
+
+    if User.objects.filter(email=email).exclude(id=user.id).exists():
+        return Response({'errore': 'Email già in uso'}, status=400)
+
+    user.email = email
+    user.username = email
+    user.first_name = first_name
+    user.last_name = last_name
+    user.save()
 
     return Response({'success': True})
 
@@ -275,7 +276,6 @@ def crea_utente(request):
         password=password_temp,
     )
 
-    from django.contrib.auth.models import Group
     try:
         gruppo_ruolo = Group.objects.get(name=ruolo)
         utente.groups.add(gruppo_ruolo)
@@ -299,7 +299,6 @@ def salva_log(utente, azione, oggetto):
         oggetto=oggetto,
     )
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def lista_utenti(request):
@@ -318,28 +317,6 @@ def lista_utenti(request):
     } for u in utenti]
     return Response(data)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def aggiorna_profilo(request):
-    user = request.user
-    email = request.data.get('email')
-    first_name = request.data.get('first_name', '')
-    last_name = request.data.get('last_name', '')
-
-    if not email:
-        return Response({'errore': 'Email obbligatoria'}, status=400)
-
-    if User.objects.filter(email=email).exclude(id=user.id).exists():
-        return Response({'errore': 'Email già in uso'}, status=400)
-
-    user.email = email
-    user.username = email
-    user.first_name = first_name
-    user.last_name = last_name
-    user.save()
-
-    return Response({'success': True})
-
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def aggiorna_utente(request, pk):
@@ -347,14 +324,12 @@ def aggiorna_utente(request, pk):
         return Response(status=403)
 
     user = User.objects.get(id=pk)
-
     email = request.data.get("email")
     ruolo = request.data.get("ruolo")
 
     if email:
         user.email = email
         user.username = email
-
         try:
             parte = email.split("@")[0]
             cognome, nome = parte.split(".")
@@ -372,7 +347,6 @@ def aggiorna_utente(request, pk):
             pass
 
     user.save()
-
     return Response({"success": True})
 
 @api_view(['DELETE'])
@@ -407,9 +381,9 @@ def richiedi_reset_password(request):
         utente.save()
         send_mail(
             subject='Reset password - AjaksInventory',
-            message=f"Salve{utente.first_name},\nquella che segue è il reset della password da lei richiesto: \n{password_temp}\n si raccomanda di cambiarla immediatamente dalla pagina impostazioni una volta entrato, \n AjaksInventory - ITIS E. Fermi Modena",
-            from_email = settings.DEFAULT_FROM_EMAIL,
-            recipient_list = [email],
+            message=f"Salve {utente.first_name},\nquella che segue è il reset della password da lei richiesto: \n{password_temp}\n si raccomanda di cambiarla immediatamente dalla pagina impostazioni una volta entrato, \n AjaksInventory - ITIS E. Fermi Modena",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
         )
     else:
         admin = User.objects.filter(groups__name='Amministratore').first()
@@ -417,7 +391,7 @@ def richiedi_reset_password(request):
             send_mail(
                 subject='Richiesta reset password - AjaksInventory',
                 message=f'Salve, \nutente {utente.first_name} {utente.last_name} ({email}) ha richiesto il reset della password. \nAjaksInventory - ITIS E. Fermi Modena',
-                from_email = settings.DEFAULT_FROM_EMAIL,
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[admin.email],
             )
     return Response({'success': True})
@@ -492,7 +466,6 @@ def elimina_categoria(request, categoria_id):
         )
 
     Categories.objects.filter(id__in=tutti_ids).delete()
-
     salva_log(request.user, 'Eliminata', f'Categoria: {nome}')
     return Response({'success': True})
 
@@ -511,7 +484,6 @@ def modifica_categoria(request, categoria_id):
         salva_log(request.user, 'Modificata', f'Categoria: {nome}')
 
     return Response({'success': True})
-
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -538,7 +510,6 @@ def elimina_posizione(request, posizione_id):
     salva_log(request.user, 'Eliminata', f'Posizione: {nome}')
     return Response({'success': True})
 
-
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def modifica_posizione(request, posizione_id):
@@ -558,4 +529,3 @@ def modifica_posizione(request, posizione_id):
         salva_log(request.user, 'Modificata', f'Posizione: {nome}')
 
     return Response({'success': True})
-
